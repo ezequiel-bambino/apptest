@@ -173,6 +173,10 @@ body {
   transition: all 0.3s;
 }
 
+.forecast-select option:first-child {
+  color: #999;
+}
+
 .forecast-select:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
@@ -222,9 +226,10 @@ body {
   font-size: 18px;
   color: #333;
   margin-bottom: 15px;
-  text-align: left;
+  text-align: center;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 
@@ -232,11 +237,11 @@ body {
   content: "🍕";
 }
 
-/* Input Groups */
+/* Input Groups - Centered */
 .stock-inputs, .waste-inputs {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 40px;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -275,10 +280,11 @@ body {
   color: #999;
 }
 
-/* Status Selector */
+/* Status Selector - Centered */
 .status-selector {
   display: flex;
-  gap: 20px;
+  justify-content: center;
+  gap: 30px;
   margin-bottom: 15px;
   flex-wrap: wrap;
 }
@@ -296,17 +302,18 @@ body {
   accent-color: #e63946;
 }
 
-.status-option label {
+.status-option span {
   font-size: 16px;
   cursor: pointer;
   color: #555;
 }
 
-/* Waste & Sellout Sections */
+/* Waste & Sellout Sections - Centered */
 .waste-section, .sellout-section {
   margin-top: 15px;
   padding: 15px;
   border-radius: 10px;
+  text-align: center;
 }
 
 .waste-section {
@@ -317,6 +324,14 @@ body {
 .sellout-section {
   background: #e8f5e9;
   border-left: 4px solid #4caf50;
+}
+
+.sellout-section label {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #555;
 }
 
 .sellout-section input {
@@ -346,6 +361,7 @@ body {
   font-weight: 700;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   margin-bottom: 12px;
   color: #333;
@@ -383,13 +399,14 @@ body {
   background: #f5f5f5;
   border-radius: 8px;
   color: #333;
+  text-align: center;
 }
 
 .drop-cell {
   padding: 10px;
   background: #fafafa;
   border-radius: 8px;
-  text-align: left;
+  text-align: center;
 }
 
 .drop-cell.qty {
@@ -512,6 +529,7 @@ body {
   color: #888;
   margin-top: 8px;
   font-style: italic;
+  text-align: center;
 }
 
 .hidden {
@@ -547,7 +565,12 @@ body {
   }
   
   .status-selector {
-    gap: 15px;
+    gap: 20px;
+  }
+  
+  .sellout-section label {
+    display: block;
+    margin-bottom: 8px;
   }
 }
 </style>
@@ -558,7 +581,7 @@ body {
 <div class="container">
   <img src="icon.png" class="logo" alt="Merrion Shop Logo" onerror="this.style.display='none'">
   
-  <div class="title">🛒 MERRION SHOP</div>
+  <div class="title">🍕 MERRION SHOP</div>
   <div class="subtitle">Daily Management System</div>
   <div id="todayDate" class="date"></div>
   
@@ -576,14 +599,15 @@ body {
       <input type="text" id="stockUser" class="user-input" placeholder="Enter your name" autocomplete="off">
     </div>
     
-    <!-- Unified Forecast Card -->
+    <!-- Unified Forecast Card - No default option -->
     <div class="forecast-card">
       <div class="forecast-label">
         <span>📊</span> Forecast:
       </div>
       <select id="forecast" class="forecast-select">
-        <option value="Evening Event / Busy">🌙 Evening Event / Busy</option>
-        <option value="Normal day / Good weather" selected>☀️ Normal day / Good weather</option>
+        <option value="" disabled selected>-- Select forecast --</option>
+        <option value="Evening Event / Busy">🎊 Evening Event / Busy</option>
+        <option value="Normal day / Good weather">☀️ Normal day / Good weather</option>
         <option value="Rain and storm coming">🌧️ Rain and storm coming</option>
       </select>
     </div>
@@ -885,7 +909,7 @@ function getOriginalPizzaName(encodedName) {
 function resetForm(){
   if(confirm("Are you sure you want to start a new stock form? This will clear all current data.")){
     document.getElementById("stockUser").value = "";
-    document.getElementById("forecast").value = "Normal day / Good weather";
+    document.getElementById("forecast").value = "";
     document.querySelectorAll("#stockForm input").forEach(input => input.value = "0");
     
     enableStockForm();
