@@ -2,7 +2,8 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>BAMBINO CPU - Kitchen Management</title>
+<title>Bambino Pizza - Kitchen App</title>
+<link rel="manifest" href="manifest.json">
 
 <style>
 * {
@@ -41,16 +42,22 @@ body {
   margin: 0 auto 15px;
 }
 
-h1 {
-  font-size: 28px;
+h2 {
   margin-bottom: 5px;
   color: #333;
+}
+
+.subtitle {
+  color: #e63946;
+  font-size: 16px;
+  margin-bottom: 20px;
+  font-weight: 500;
 }
 
 .date {
   font-size: 16px;
   color: #666;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 /* Tabs Styles */
@@ -66,7 +73,7 @@ h1 {
   padding: 15px 20px;
   background: none;
   border: none;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   color: #666;
   cursor: pointer;
@@ -93,6 +100,62 @@ h1 {
 
 .tab-content.active {
   display: block;
+}
+
+/* Welcome Screen */
+.welcome-screen {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.welcome-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.welcome-text {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.welcome-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.welcome-btn {
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 150px;
+}
+
+.welcome-btn.drops {
+  background: #e63946;
+  color: white;
+}
+
+.welcome-btn.drops:hover {
+  background: #c1121f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(230, 57, 70, 0.3);
+}
+
+.welcome-btn.portions {
+  background: #e63946;
+  color: white;
+}
+
+.welcome-btn.portions:hover {
+  background: #c1121f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(230, 57, 70, 0.3);
 }
 
 /* Form Styles */
@@ -130,20 +193,106 @@ h1 {
   opacity: 0.7;
 }
 
-.categoryTitle {
-  font-size: 20px;
-  margin: 25px 0 15px 0;
-  font-weight: 700;
-  color: #333;
+/* Forecast Section - New unified style */
+.forecast-section {
+  margin-bottom: 25px;
   text-align: left;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #e63946;
-  display: inline-block;
 }
 
-/* Items Grid */
+.forecast-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+}
+
+.forecast-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forecast-label span {
+  font-size: 24px;
+}
+
+.forecast-select {
+  width: 100%;
+  padding: 14px 15px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.forecast-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+}
+
+.forecast-select:disabled {
+  background: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.forecast-option {
+  padding: 10px;
+}
+
+/* Drop Section (hidden now, but kept for compatibility) */
+.drop-section {
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.drop-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.drop-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #555;
+  white-space: nowrap;
+}
+
+.drop-select {
+  flex: 1;
+  padding: 12px 15px;
+  font-size: 18px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+.drop-select:focus {
+  outline: none;
+  border-color: #e63946;
+}
+
+.drop-select:disabled {
+  background: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Items Grid - Card Style */
 .items-grid {
-  margin: 20px 0;
+  margin: 25px 0;
   opacity: 1;
   transition: opacity 0.3s;
 }
@@ -159,74 +308,77 @@ h1 {
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
-  padding: 10px;
+  padding: 12px;
   background: #fafafa;
-  border-radius: 8px;
+  border-radius: 10px;
   transition: all 0.3s;
+  border: 1px solid #eee;
 }
 
 .row:hover {
   background: #f5f5f5;
   transform: translateX(5px);
+  border-color: #e63946;
 }
 
-.ingredientContainer {
+.itemBox {
   text-align: left;
 }
 
-.ingredient {
+.item-name {
   font-weight: 600;
   font-size: 16px;
   color: #333;
 }
 
-.unit {
+.item-unit {
   font-size: 13px;
   color: #888;
   margin-top: 2px;
 }
 
-input[type="number"] {
+input {
   width: 70px;
   padding: 10px;
   font-size: 18px;
   text-align: center;
   border: 2px solid #ddd;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: border-color 0.3s;
+  background: white;
 }
 
-input[type="number"]:focus {
+input:focus {
   outline: none;
   border-color: #e63946;
 }
 
-input[type="number"]:disabled {
+input:disabled {
   background: #f5f5f5;
   color: #999;
   cursor: not-allowed;
   opacity: 0.7;
 }
 
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type="number"] {
+input[type=number] {
   -moz-appearance: textfield;
 }
 
 .btn-qty {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   font-size: 20px;
   font-weight: bold;
   border: none;
   background: #e63946;
   color: white;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -251,7 +403,7 @@ input[type="number"] {
   background: #e63946;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s;
   margin-top: 20px;
@@ -297,7 +449,7 @@ input[type="number"] {
   width: 100%;
   padding: 12px;
   font-size: 18px;
-  background: #4a90e2;
+  background: #e63946;
   color: white;
   border: none;
   border-radius: 8px;
@@ -307,10 +459,11 @@ input[type="number"] {
 }
 
 .btn-secondary:hover {
-  background: #357abd;
+  background: #c1121f;
   transform: translateY(-2px);
 }
 
+/* Back Button */
 .btn-back {
   width: 100%;
   padding: 12px;
@@ -334,7 +487,7 @@ input[type="number"] {
   padding: 15px;
   background: #e8f5e9;
   border-left: 4px solid #4caf50;
-  border-radius: 4px;
+  border-radius: 8px;
   text-align: left;
   font-size: 14px;
   color: #2e7d32;
@@ -348,93 +501,17 @@ input[type="number"] {
 
 .last-submission-info {
   margin: 15px 0;
-  padding: 12px;
+  padding: 12px 15px;
   background: #fff3e0;
-  border-left: 4px solid #ff9800;
-  border-radius: 4px;
+  border-left: 4px solid #e63946;
+  border-radius: 8px;
   text-align: left;
   font-size: 14px;
   color: #e65100;
 }
 
-/* Info Box */
-.infoBox {
-  background: #f8f9fa;
-  border-left: 4px solid #e63946;
-  border-radius: 8px;
-  padding: 12px 15px;
-  margin-bottom: 20px;
-  text-align: left;
-  font-size: 14px;
-  color: #555;
-}
-
-/* Counters */
-.counterRow {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
-}
-
-.counter {
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 14px;
-  color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.counter.red { background: #f44336; }
-.counter.yellow { background: #ff9800; }
-.counter.green { background: #4caf50; }
-
-/* Data Table */
-.dataTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-.dataTable th {
-  text-align: center;
-  padding: 12px;
-  border-bottom: 2px solid #e0e0e0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #555;
-  background: #fafafa;
-}
-
-.dataTable td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-  font-size: 15px;
-  text-align: center;
-}
-
-.prep {
-  font-weight: 600;
-  text-align: left;
-  color: #333;
-}
-
-.status {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  display: inline-block;
-}
-
-.status.good { background: #c8e6c9; color: #2e7d32; }
-.status.low { background: #ffe0b2; color: #e65100; }
-.status.out { background: #ffcdd2; color: #c62828; }
-
 .note {
-  margin-top: 20px;
+  margin-top: 15px;
   font-size: 13px;
   color: #888;
   text-align: center;
@@ -452,38 +529,40 @@ input[type="number"] {
   
   .row {
     gap: 8px;
+    padding: 10px;
   }
   
   .row:hover {
     transform: translateX(0);
   }
   
-  input[type="number"] {
+  input {
     width: 60px;
     font-size: 16px;
     padding: 8px;
   }
   
   .btn-qty {
-    width: 35px;
-    height: 35px;
+    width: 36px;
+    height: 36px;
     font-size: 18px;
   }
   
-  .counter {
-    padding: 8px 15px;
-    font-size: 12px;
+  .welcome-buttons {
+    flex-direction: column;
   }
   
-  .tab {
-    padding: 12px 10px;
-    font-size: 14px;
+  .welcome-btn {
+    width: 100%;
   }
   
-  .dataTable th,
-  .dataTable td {
-    padding: 8px;
-    font-size: 13px;
+  .forecast-card {
+    padding: 15px;
+  }
+  
+  .forecast-select {
+    font-size: 16px;
+    padding: 12px;
   }
 }
 </style>
@@ -494,436 +573,704 @@ input[type="number"] {
 <div class="container">
   <img src="icon.png" class="logo" alt="Bambino Pizza">
   
-  <h1>🍕 BAMBINO CPU</h1>
+  <h2>🍕 Kitchen App</h2>
+  <div class="subtitle">Bambino Pizza Dublin</div>
   
   <div id="todayDate" class="date"></div>
   
   <!-- Tabs Navigation -->
   <div class="tabs">
-    <button class="tab" onclick="showTab('form')">📝 Stock Form</button>
-    <button class="tab" onclick="showTab('stock')">📊 Stock Level</button>
-    <button class="tab" onclick="showTab('prod')">📈 Production</button>
-    <button class="tab" onclick="showTab('purchase')">🛒 Purchase</button>
+    <button class="tab" onclick="switchTab('drops')">📦 Drops</button>
+    <button class="tab" onclick="switchTab('portions')">🥘 Portions</button>
   </div>
   
-  <!-- Tab Content Container -->
-  <div id="tabContent" class="tab-content active"></div>
+  <!-- Welcome Screen (shown when no tab is active) -->
+  <div id="welcomeScreen" class="welcome-screen">
+    <div class="welcome-icon">👨‍🍳</div>
+    <div class="welcome-text">Select a section to begin</div>
+    <div class="welcome-buttons">
+      <button class="welcome-btn drops" onclick="switchTab('drops')">
+        📦 Drops
+      </button>
+      <button class="welcome-btn portions" onclick="switchTab('portions')">
+        🥘 Portions
+      </button>
+    </div>
+  </div>
   
-  <div class="note">
-    ⚠️ Verify all quantities before submitting
+  <!-- ==================== DROPS TAB ==================== -->
+  <div id="dropsTab" class="tab-content">
+    <div class="user-section">
+      <label class="user-label">👤 Staff Name:</label>
+      <input 
+        type="text" 
+        id="dropsStaffName" 
+        class="user-input" 
+        placeholder="Enter your name"
+        autocomplete="off"
+      >
+    </div>
+    
+    <!-- Unified Forecast Section -->
+    <div class="forecast-section">
+      <div class="forecast-card">
+        <label class="forecast-label">
+          <span>📊</span> Forecast:
+        </label>
+        <select id="forecastOption" class="forecast-select">
+          <option value="Evening Event / Busy">🌙 Evening Event / Busy</option>
+          <option value="Normal day / Good weather" selected>☀️ Normal day / Good weather</option>
+          <option value="Rain and storm coming">🌧️ Rain and storm coming</option>
+        </select>
+      </div>
+    </div>
+    
+    <div id="dropsLastSubmission" class="last-submission-info" style="display: none;"></div>
+    <div id="dropsStatusMessage" class="status-message" style="display: none;"></div>
+    
+    <div id="dropsForm" class="items-grid"></div>
+    
+    <button id="dropsSubmitBtn" class="btn-primary" onclick="submitDrop()">
+      📤 SUBMIT DROP
+    </button>
+    
+    <button id="dropsNewSubmitBtn" class="btn-secondary" onclick="resetDropsForm()" style="display: none;">
+      🔄 NEW SUBMISSION
+    </button>
+    
+    <button class="btn-back" onclick="backToWelcome()">
+      ← Back to Menu
+    </button>
+    
+    <div class="note">
+      ⚠️ Verify all quantities before submitting
+    </div>
+  </div>
+  
+  <!-- ==================== PORTIONS TAB ==================== -->
+  <div id="portionsTab" class="tab-content">
+    <div class="user-section">
+      <label class="user-label">👤 Staff Name:</label>
+      <input 
+        type="text" 
+        id="portionsStaffName" 
+        class="user-input" 
+        placeholder="Enter your name"
+        autocomplete="off"
+      >
+    </div>
+    
+    <div id="portionsLastSubmission" class="last-submission-info" style="display: none;"></div>
+    <div id="portionsStatusMessage" class="status-message" style="display: none;"></div>
+    
+    <div id="portionsForm" class="items-grid"></div>
+    
+    <button id="portionsSubmitBtn" class="btn-primary" onclick="submitPortions()">
+      📤 SUBMIT PORTIONS
+    </button>
+    
+    <button id="portionsNewSubmitBtn" class="btn-secondary" onclick="resetPortionsForm()" style="display: none;">
+      🔄 NEW SUBMISSION
+    </button>
+    
+    <button class="btn-back" onclick="backToWelcome()">
+      ← Back to Menu
+    </button>
+    
+    <div class="note">
+      ⚠️ Verify all quantities before submitting
+    </div>
   </div>
 </div>
 
 <script>
-const URL = "https://script.google.com/macros/s/AKfycbyhEMh2GCCSz-bDB6SF51B7yxKbt4RuvT5Kz769JmTlvWMed2MdqKV6phw13Ym8GSB_ow/exec";
+// ==================== CONFIGURATION ====================
+const ENDPOINTS = {
+  DROPS: "https://script.google.com/macros/s/AKfycbxguKcw1zBOScTEsrmYbRdqgSH0y6qcgMxvpYDCxvL-CKAr_8noC_mnqOEDMG9H6yY/exec",
+  PORTIONS: "https://script.google.com/macros/s/AKfycbxOkG1NhG8nCPNc04kNpAmK1m3BGJorHCpCKvFkhLZghQ2T1HHUWq3G9DGX1taks6cy/exec"
+};
 
-document.getElementById("todayDate").innerText = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+// ==================== GLOBAL STATE ====================
+window.dropsLoaded = false;
+window.portionsLoaded = false;
+window.lastDropsSubmission = null;
+window.lastPortionsSubmission = null;
 
-// Tab management
-function setActiveTab(tabName) {
+// ==================== INITIALIZATION ====================
+function initializeApp() {
+  setDate();
+  loadSavedState();
+  
+  // Check if we should show a tab directly based on saved state
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get('tab');
+  if(tabParam === 'drops' || tabParam === 'portions') {
+    switchTab(tabParam);
+  }
+}
+
+// Load saved state from localStorage and apply it
+function loadSavedState() {
+  // Load Drops saved state
+  const savedDrops = localStorage.getItem('kitchen_last_drops_submission');
+  if(savedDrops) {
+    try {
+      window.lastDropsSubmission = JSON.parse(savedDrops);
+      console.log('Loaded drops submission:', window.lastDropsSubmission);
+    } catch(e) {
+      console.error('Error parsing drops submission:', e);
+      localStorage.removeItem('kitchen_last_drops_submission');
+    }
+  }
+  
+  // Load Portions saved state
+  const savedPortions = localStorage.getItem('kitchen_last_portions_submission');
+  if(savedPortions) {
+    try {
+      window.lastPortionsSubmission = JSON.parse(savedPortions);
+      console.log('Loaded portions submission:', window.lastPortionsSubmission);
+    } catch(e) {
+      console.error('Error parsing portions submission:', e);
+      localStorage.removeItem('kitchen_last_portions_submission');
+    }
+  }
+}
+
+// ==================== TAB SWITCHING ====================
+function switchTab(tabName) {
+  document.getElementById("welcomeScreen").style.display = "none";
+  
   document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.remove('active');
   });
   
   const tabs = document.querySelectorAll('.tab');
-  const tabMap = { 'form': 0, 'stock': 1, 'prod': 2, 'purchase': 3 };
-  if (tabs[tabMap[tabName]]) {
-    tabs[tabMap[tabName]].classList.add('active');
-  }
-}
-
-function showTab(tabName) {
-  setActiveTab(tabName);
-  
-  if (tabName === "form") loadForm();
-  if (tabName === "stock") loadStock();
-  if (tabName === "prod") loadProduction();
-  if (tabName === "purchase") loadPurchase();
-}
-
-// FORM
-async function loadForm() {
-  const r = await fetch(URL + "?action=getIngredients");
-  const data = await r.json();
-
-  const tab = document.getElementById("tabContent");
-  tab.innerHTML = "";
-
-  const container = document.createElement("div");
-  container.className = "items-grid";
-  container.id = "formRows";
-
-  // Check for saved submission
-  const last = localStorage.getItem("lastStockSubmit");
-  const isLocked = last && !JSON.parse(last).completed;
-
-  if (last) {
-    const lastData = JSON.parse(last);
-    
-    // New Stock button
-    const newBtn = document.createElement("button");
-    newBtn.className = "btn-secondary";
-    newBtn.innerText = "🔄 NEW STOCK";
-    newBtn.onclick = () => {
-      if (confirm("Start a new stock submission? Current data will be cleared.")) {
-        localStorage.removeItem("lastStockSubmit");
-        loadForm();
-      }
-    };
-    tab.appendChild(newBtn);
-
-    // Last submission info
-    const lastUpdateDiv = document.createElement("div");
-    lastUpdateDiv.className = "last-submission-info";
-    const lastTime = new Date(lastData.time || Date.now());
-    lastUpdateDiv.innerHTML = `📋 Last update: ${lastTime.toLocaleDateString('en-GB')} at ${lastTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} by ${lastData.chef || 'Unknown'}`;
-    tab.appendChild(lastUpdateDiv);
-  }
-
-  // Chef name input
-  const userSection = document.createElement("div");
-  userSection.className = "user-section";
-  userSection.innerHTML = `
-    <label class="user-label">👨‍🍳 Chef Name:</label>
-    <input type="text" id="chefName" class="user-input" placeholder="Enter your name" autocomplete="off">
-  `;
-  tab.appendChild(userSection);
-
-  tab.appendChild(container);
-
-  // Separate categories
-  const dry = data.filter(i => i.category === "Dry Store");
-  const cold = data.filter(i => i.category === "Cold Room");
-
-  function renderGroup(title, items) {
-    if (items.length === 0) return;
-
-    const titleDiv = document.createElement("div");
-    titleDiv.className = "categoryTitle";
-    titleDiv.innerText = title;
-    container.appendChild(titleDiv);
-
-    items.forEach(item => {
-      const row = document.createElement("div");
-      row.className = "row";
-      const itemId = item.name.replace(/[^a-zA-Z0-9]/g, '_');
-      
-      let savedValue = '';
-      if (isLocked && last) {
-        const lastData = JSON.parse(last);
-        const savedItem = lastData.data.find(d => d.name === item.name);
-        if (savedItem) savedValue = savedItem.qty;
-      }
-      
-      row.innerHTML = `
-        <div class="ingredientContainer">
-          <div class="ingredient">${item.name}</div>
-          <div class="unit">${item.unit || ""}</div>
-        </div>
-        <button class="btn-qty" onclick="changeQuantity('${itemId}', -1)">−</button>
-        <input type="number" id="${itemId}" data-item-name="${item.name}" min="0" placeholder="0" value="${savedValue}" ${isLocked ? 'disabled' : ''}>
-        <button class="btn-qty" onclick="changeQuantity('${itemId}', 1)" ${isLocked ? 'disabled' : ''}>+</button>
-      `;
-      container.appendChild(row);
-    });
-  }
-
-  renderGroup("📦 Dry Store", dry);
-  renderGroup("❄️ Cold Room", cold);
-
-  // Submit button
-  const submitBtn = document.createElement("button");
-  submitBtn.id = "submitStockBtn";
-  submitBtn.className = "btn-primary";
-  submitBtn.innerText = "📤 SUBMIT STOCK";
-  submitBtn.onclick = submitStock;
-  tab.appendChild(submitBtn);
-
-  if (isLocked) {
-    const lastData = JSON.parse(last);
-    document.getElementById("chefName").value = lastData.chef || '';
-    document.getElementById("chefName").disabled = true;
-    submitBtn.disabled = true;
+  if(tabName === 'drops') {
+    tabs[0].classList.add('active');
   } else {
-    document.getElementById("chefName").focus();
+    tabs[1].classList.add('active');
+  }
+  
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  document.getElementById(tabName + 'Tab').classList.add('active');
+  
+  // Load data when tab is selected
+  if(tabName === 'drops') {
+    if(!window.dropsLoaded) {
+      loadDropsItems();
+      window.dropsLoaded = true;
+    } else {
+      applyDropsLockedState();
+    }
+  }
+  
+  if(tabName === 'portions') {
+    if(!window.portionsLoaded) {
+      loadPortionsItems();
+      window.portionsLoaded = true;
+    } else {
+      applyPortionsLockedState();
+    }
   }
 }
 
-function changeQuantity(id, delta) {
-  const input = document.getElementById(id);
-  if (!input || input.disabled) return;
+function backToWelcome() {
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  
+  document.getElementById("welcomeScreen").style.display = "block";
+}
+
+// ==================== DATE ====================
+function setDate() {
+  const today = new Date();
+  const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  document.getElementById("todayDate").innerText = today.toLocaleDateString('en-GB', options);
+}
+
+// ==================== DROPS FUNCTIONS ====================
+async function loadDropsItems() {
+  try {
+    const res = await fetch(`${ENDPOINTS.DROPS}?action=getPizzas`);
+    const data = await res.json();
+    renderDropsForm(data);
+  } catch(error) {
+    showStatus('drops', 'Error loading pizzas. Please refresh.', 'error');
+  }
+}
+
+function renderDropsForm(items) {
+  const container = document.getElementById("dropsForm");
+  container.innerHTML = "";
+  
+  // Check if there's a locked submission
+  const hasLockedSubmission = window.lastDropsSubmission !== null;
+  
+  items.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "row";
+    
+    const itemId = item.replace(/[^a-zA-Z0-9]/g, '_');
+    
+    // Get saved value if exists
+    let savedValue = '';
+    if(hasLockedSubmission && window.lastDropsSubmission && window.lastDropsSubmission.data) {
+      const savedItem = window.lastDropsSubmission.data.pizzas.find(p => p.pizza === item);
+      if(savedItem) savedValue = savedItem.quantity;
+    }
+    
+    div.innerHTML = `
+      <div class="itemBox">
+        <div class="item-name">${item}</div>
+      </div>
+      <button class="btn-qty" onclick="adjustDropsQuantity('${itemId}', -1)">−</button>
+      <input 
+        type="number"
+        id="drops_${itemId}"
+        data-item-name="${item}"
+        min="0"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        placeholder="0"
+        value="${savedValue}"
+        onkeydown="handleEnterKey(event, 'drops')"
+        oninput="validateInput(this)"
+        ${hasLockedSubmission ? 'disabled' : ''}
+      >
+      <button class="btn-qty" onclick="adjustDropsQuantity('${itemId}', 1)" ${hasLockedSubmission ? 'disabled' : ''}>+</button>
+    `;
+    
+    container.appendChild(div);
+  });
+  
+  // Apply locked state to the whole form
+  if(hasLockedSubmission && window.lastDropsSubmission) {
+    document.getElementById("dropsStaffName").value = window.lastDropsSubmission.staffName || '';
+    document.getElementById("dropsStaffName").disabled = true;
+    
+    if(window.lastDropsSubmission.forecast) {
+      document.getElementById("forecastOption").value = window.lastDropsSubmission.forecast;
+    }
+    document.getElementById("forecastOption").disabled = true;
+    
+    document.getElementById("dropsSubmitBtn").style.display = 'none';
+    document.getElementById("dropsNewSubmitBtn").style.display = 'block';
+    
+    displayLastDropsSubmission();
+  } else {
+    document.getElementById("dropsStaffName").disabled = false;
+    document.getElementById("forecastOption").disabled = false;
+    document.getElementById("forecastOption").value = "Normal day / Good weather";
+    document.getElementById("dropsSubmitBtn").style.display = 'block';
+    document.getElementById("dropsNewSubmitBtn").style.display = 'none';
+    document.getElementById("dropsStaffName").focus();
+  }
+}
+
+function applyDropsLockedState() {
+  const hasLockedSubmission = window.lastDropsSubmission !== null;
+  
+  if(hasLockedSubmission) {
+    const inputs = document.querySelectorAll("#dropsForm input");
+    const buttons = document.querySelectorAll("#dropsForm .btn-qty");
+    
+    inputs.forEach(input => input.disabled = true);
+    buttons.forEach(btn => btn.disabled = true);
+    
+    document.getElementById("dropsStaffName").disabled = true;
+    document.getElementById("forecastOption").disabled = true;
+    
+    document.getElementById("dropsSubmitBtn").style.display = 'none';
+    document.getElementById("dropsNewSubmitBtn").style.display = 'block';
+  }
+}
+
+function adjustDropsQuantity(id, delta) {
+  const input = document.getElementById('drops_' + id);
+  if(!input || input.disabled) return;
   
   let current = parseInt(input.value) || 0;
   current = Math.max(0, current + delta);
   input.value = current || '';
 }
 
-async function submitStock() {
-  const chef = document.getElementById("chefName").value.trim();
-  if (!chef) {
-    showStatus("Chef name is required");
-    document.getElementById("chefName").focus();
+async function submitDrop() {
+  const staffName = document.getElementById("dropsStaffName").value.trim();
+  if(!staffName) {
+    showStatus('drops', 'Please enter staff name', 'error');
+    document.getElementById("dropsStaffName").focus();
     return;
   }
-
-  const inputs = document.querySelectorAll("#formRows input[type='number']");
-  let allFilled = true;
-  inputs.forEach(input => {
-    if (input.value === "" || parseInt(input.value) < 0) allFilled = false;
-  });
-
-  if (!allFilled) {
-    showStatus("Please fill in all quantities (use 0 if needed)", true);
-    return;
-  }
-
-  const totalItems = Array.from(inputs).reduce((sum, input) => sum + (parseInt(input.value) || 0), 0);
   
-  if (!confirm(`Confirm stock submission?\n\nChef: ${chef}\nTotal items: ${totalItems}`)) return;
-
-  // Lock form
-  document.querySelectorAll("#formRows input, #formRows .btn-qty, #chefName").forEach(el => {
-    el.disabled = true;
-  });
-
-  const submitBtn = document.getElementById("submitStockBtn");
-  submitBtn.disabled = true;
-  submitBtn.classList.add("loading");
-
-  let data = [];
+  const forecast = document.getElementById("forecastOption").value;
+  
+  const inputs = document.querySelectorAll("#dropsForm input[type='number']");
+  const pizzas = [];
+  
   inputs.forEach(input => {
-    data.push({ name: input.dataset.itemName, qty: parseInt(input.value) || 0 });
-  });
-
-  try {
-    await fetch(URL + "?action=submitStock&chef=" + encodeURIComponent(chef) + "&data=" + encodeURIComponent(JSON.stringify(data)));
-    
-    const submission = {
-      chef: chef,
-      data: data,
-      time: Date.now(),
-      completed: true
-    };
-    localStorage.setItem("lastStockSubmit", JSON.stringify(submission));
-    
-    showStatus(`✅ Stock submitted successfully by ${chef}!`, false);
-    loadForm(); // Reload to show new stock button
-  } catch (error) {
-    console.error("Error submitting stock:", error);
-    showStatus("❌ Error submitting data. Please check your connection.", true);
-    // Unlock form on error
-    document.querySelectorAll("#formRows input, #formRows .btn-qty, #chefName").forEach(el => {
-      el.disabled = false;
+    pizzas.push({
+      pizza: input.dataset.itemName,
+      quantity: parseInt(input.value) || 0
     });
-    submitBtn.disabled = false;
-    submitBtn.classList.remove("loading");
+  });
+  
+  const totalPizzas = pizzas.reduce((sum, p) => sum + p.quantity, 0);
+  
+  if(!confirm(`Confirm submission?\n\n👤 Staff: ${staffName}\n📊 Forecast: ${forecast}\n🍕 Total pizzas: ${totalPizzas}`)) {
+    return;
+  }
+  
+  // Lock form immediately
+  lockDropsForm();
+  
+  const submitBtn = document.getElementById("dropsSubmitBtn");
+  submitBtn.classList.add('loading');
+  
+  const payload = {
+    staffName: staffName,
+    forecast: forecast,
+    pizzas: pizzas
+  };
+  
+  try {
+    const res = await fetch(`${ENDPOINTS.DROPS}?action=submitDrop&data=${encodeURIComponent(JSON.stringify(payload))}`);
+    const result = await res.json();
+    
+    submitBtn.classList.remove('loading');
+    
+    if(result.status === "ok") {
+      // Save submission to localStorage with all form data
+      const submission = {
+        timestamp: new Date().toISOString(),
+        staffName: staffName,
+        forecast: forecast,
+        data: payload
+      };
+      localStorage.setItem('kitchen_last_drops_submission', JSON.stringify(submission));
+      window.lastDropsSubmission = submission;
+      
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      showStatus('drops', `✅ Submitted at ${timeStr} by ${staffName} | Forecast: ${forecast}`, 'success');
+      displayLastDropsSubmission();
+      
+      document.getElementById("dropsSubmitBtn").style.display = 'none';
+      document.getElementById("dropsNewSubmitBtn").style.display = 'block';
+    } else {
+      showStatus('drops', 'Error saving data. Please try again.', 'error');
+      unlockDropsForm();
+    }
+  } catch(error) {
+    submitBtn.classList.remove('loading');
+    showStatus('drops', 'Connection error. Please check your internet.', 'error');
+    unlockDropsForm();
   }
 }
 
-function showStatus(message, isError = false) {
-  let statusDiv = document.getElementById("dynamicStatus");
-  if (!statusDiv) {
-    statusDiv = document.createElement("div");
-    statusDiv.id = "dynamicStatus";
-    statusDiv.className = "status-message";
-    const tab = document.getElementById("tabContent");
-    tab.appendChild(statusDiv);
+function lockDropsForm() {
+  document.getElementById("dropsStaffName").disabled = true;
+  document.getElementById("forecastOption").disabled = true;
+  
+  document.querySelectorAll("#dropsForm input").forEach(input => input.disabled = true);
+  document.querySelectorAll("#dropsForm .btn-qty").forEach(btn => btn.disabled = true);
+  document.getElementById("dropsSubmitBtn").disabled = true;
+}
+
+function unlockDropsForm() {
+  document.getElementById("dropsStaffName").disabled = false;
+  document.getElementById("forecastOption").disabled = false;
+  
+  document.querySelectorAll("#dropsForm input").forEach(input => input.disabled = false);
+  document.querySelectorAll("#dropsForm .btn-qty").forEach(btn => btn.disabled = false);
+  document.getElementById("dropsSubmitBtn").disabled = false;
+}
+
+function resetDropsForm() {
+  // Clear saved submission
+  localStorage.removeItem('kitchen_last_drops_submission');
+  window.lastDropsSubmission = null;
+  
+  unlockDropsForm();
+  
+  document.getElementById("dropsStaffName").value = '';
+  document.getElementById("forecastOption").value = "Normal day / Good weather";
+  
+  document.querySelectorAll("#dropsForm input").forEach(input => input.value = '');
+  
+  document.getElementById("dropsStatusMessage").style.display = 'none';
+  document.getElementById("dropsLastSubmission").style.display = 'none';
+  
+  document.getElementById("dropsSubmitBtn").style.display = 'block';
+  document.getElementById("dropsSubmitBtn").disabled = false;
+  document.getElementById("dropsSubmitBtn").classList.remove('loading');
+  document.getElementById("dropsNewSubmitBtn").style.display = 'none';
+  
+  document.getElementById("dropsStaffName").focus();
+}
+
+function displayLastDropsSubmission() {
+  if(!window.lastDropsSubmission) return;
+  
+  const sub = window.lastDropsSubmission;
+  const date = new Date(sub.timestamp);
+  const dateStr = date.toLocaleDateString('en-GB');
+  const timeStr = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  
+  const el = document.getElementById("dropsLastSubmission");
+  el.innerHTML = `📋 Last submission: ${sub.staffName} on ${dateStr} at ${timeStr}<br>📊 Forecast: ${sub.forecast || 'Not specified'}`;
+  el.style.display = 'block';
+}
+
+// ==================== PORTIONS FUNCTIONS ====================
+async function loadPortionsItems() {
+  try {
+    const res = await fetch(`${ENDPOINTS.PORTIONS}?action=getPortionablePreps`);
+    const data = await res.json();
+    renderPortionsForm(data);
+  } catch(error) {
+    console.error('Error loading portions:', error);
+    showStatus('portions', 'Error loading preps. Please refresh.', 'error');
+  }
+}
+
+function renderPortionsForm(items) {
+  const container = document.getElementById("portionsForm");
+  container.innerHTML = "";
+  
+  const hasLockedSubmission = window.lastPortionsSubmission !== null;
+  
+  items.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "row";
+    
+    const itemId = item.name.replace(/[^a-zA-Z0-9]/g, '_');
+    
+    let savedValue = '';
+    if(hasLockedSubmission && window.lastPortionsSubmission && window.lastPortionsSubmission.data) {
+      const savedItem = window.lastPortionsSubmission.data.preps.find(p => p.name === item.name);
+      if(savedItem) savedValue = savedItem.quantity;
+    }
+    
+    div.innerHTML = `
+      <div class="itemBox">
+        <div class="item-name">${item.name}</div>
+        <div class="item-unit">${item.unit || ''}</div>
+      </div>
+      <button class="btn-qty" onclick="adjustPortionsQuantity('${itemId}', -1)">−</button>
+      <input 
+        type="number"
+        id="portions_${itemId}"
+        data-item-name="${item.name}"
+        min="0"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        placeholder="0"
+        value="${savedValue}"
+        onkeydown="handleEnterKey(event, 'portions')"
+        oninput="validateInput(this)"
+        ${hasLockedSubmission ? 'disabled' : ''}
+      >
+      <button class="btn-qty" onclick="adjustPortionsQuantity('${itemId}', 1)" ${hasLockedSubmission ? 'disabled' : ''}>+</button>
+    `;
+    
+    container.appendChild(div);
+  });
+  
+  if(hasLockedSubmission && window.lastPortionsSubmission) {
+    document.getElementById("portionsStaffName").value = window.lastPortionsSubmission.staffName || '';
+    document.getElementById("portionsStaffName").disabled = true;
+    
+    document.getElementById("portionsSubmitBtn").style.display = 'none';
+    document.getElementById("portionsNewSubmitBtn").style.display = 'block';
+    
+    displayLastPortionsSubmission();
+  } else {
+    document.getElementById("portionsStaffName").disabled = false;
+    document.getElementById("portionsSubmitBtn").style.display = 'block';
+    document.getElementById("portionsNewSubmitBtn").style.display = 'none';
+    document.getElementById("portionsStaffName").focus();
+  }
+}
+
+function applyPortionsLockedState() {
+  const hasLockedSubmission = window.lastPortionsSubmission !== null;
+  
+  if(hasLockedSubmission) {
+    const inputs = document.querySelectorAll("#portionsForm input");
+    const buttons = document.querySelectorAll("#portionsForm .btn-qty");
+    
+    inputs.forEach(input => input.disabled = true);
+    buttons.forEach(btn => btn.disabled = true);
+    
+    document.getElementById("portionsStaffName").disabled = true;
+    
+    document.getElementById("portionsSubmitBtn").style.display = 'none';
+    document.getElementById("portionsNewSubmitBtn").style.display = 'block';
+  }
+}
+
+function adjustPortionsQuantity(id, delta) {
+  const input = document.getElementById('portions_' + id);
+  if(!input || input.disabled) return;
+  
+  let current = parseInt(input.value) || 0;
+  current = Math.max(0, current + delta);
+  input.value = current || '';
+}
+
+async function submitPortions() {
+  const staffName = document.getElementById("portionsStaffName").value.trim();
+  if(!staffName) {
+    showStatus('portions', 'Please enter staff name', 'error');
+    document.getElementById("portionsStaffName").focus();
+    return;
   }
   
-  statusDiv.innerText = message;
-  statusDiv.className = `status-message ${isError ? 'error' : ''}`;
-  statusDiv.style.display = "block";
+  const inputs = document.querySelectorAll("#portionsForm input[type='number']");
+  const preps = [];
+  
+  inputs.forEach(input => {
+    preps.push({
+      name: input.dataset.itemName,
+      quantity: parseInt(input.value) || 0
+    });
+  });
+  
+  if(!confirm(`Confirm Portions submission?\n\n👤 Staff: ${staffName}\n📦 Items recorded: ${preps.length}`)) {
+    return;
+  }
+  
+  lockPortionsForm();
+  
+  const submitBtn = document.getElementById("portionsSubmitBtn");
+  submitBtn.classList.add('loading');
+  
+  const payload = {
+    staffName: staffName,
+    preps: preps
+  };
+  
+  try {
+    const res = await fetch(`${ENDPOINTS.PORTIONS}?action=submitPortions&data=${encodeURIComponent(JSON.stringify(payload))}`);
+    const result = await res.json();
+    
+    submitBtn.classList.remove('loading');
+    
+    if(result.status === "ok") {
+      const submission = {
+        timestamp: new Date().toISOString(),
+        staffName: staffName,
+        data: payload
+      };
+      localStorage.setItem('kitchen_last_portions_submission', JSON.stringify(submission));
+      window.lastPortionsSubmission = submission;
+      
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      showStatus('portions', `✅ Portions submitted at ${timeStr} by ${staffName}`, 'success');
+      displayLastPortionsSubmission();
+      
+      document.getElementById("portionsSubmitBtn").style.display = 'none';
+      document.getElementById("portionsNewSubmitBtn").style.display = 'block';
+    } else {
+      showStatus('portions', 'Error saving data. Please try again.', 'error');
+      unlockPortionsForm();
+    }
+  } catch(error) {
+    submitBtn.classList.remove('loading');
+    showStatus('portions', 'Connection error. Please check your internet.', 'error');
+    unlockPortionsForm();
+  }
+}
+
+function lockPortionsForm() {
+  document.getElementById("portionsStaffName").disabled = true;
+  document.querySelectorAll("#portionsForm input").forEach(input => input.disabled = true);
+  document.querySelectorAll("#portionsForm .btn-qty").forEach(btn => btn.disabled = true);
+  document.getElementById("portionsSubmitBtn").disabled = true;
+}
+
+function unlockPortionsForm() {
+  document.getElementById("portionsStaffName").disabled = false;
+  document.querySelectorAll("#portionsForm input").forEach(input => input.disabled = false);
+  document.querySelectorAll("#portionsForm .btn-qty").forEach(btn => btn.disabled = false);
+  document.getElementById("portionsSubmitBtn").disabled = false;
+}
+
+function resetPortionsForm() {
+  localStorage.removeItem('kitchen_last_portions_submission');
+  window.lastPortionsSubmission = null;
+  
+  unlockPortionsForm();
+  
+  document.getElementById("portionsStaffName").value = '';
+  document.querySelectorAll("#portionsForm input").forEach(input => input.value = '');
+  
+  document.getElementById("portionsStatusMessage").style.display = 'none';
+  document.getElementById("portionsLastSubmission").style.display = 'none';
+  
+  document.getElementById("portionsSubmitBtn").style.display = 'block';
+  document.getElementById("portionsSubmitBtn").disabled = false;
+  document.getElementById("portionsSubmitBtn").classList.remove('loading');
+  document.getElementById("portionsNewSubmitBtn").style.display = 'none';
+  
+  document.getElementById("portionsStaffName").focus();
+}
+
+function displayLastPortionsSubmission() {
+  if(!window.lastPortionsSubmission) return;
+  
+  const sub = window.lastPortionsSubmission;
+  const date = new Date(sub.timestamp);
+  const dateStr = date.toLocaleDateString('en-GB');
+  const timeStr = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  
+  const el = document.getElementById("portionsLastSubmission");
+  el.innerHTML = `📋 Last submission: ${sub.staffName} on ${dateStr} at ${timeStr}`;
+  el.style.display = 'block';
+}
+
+// ==================== UTILITY FUNCTIONS ====================
+function validateInput(input) {
+  let value = parseInt(input.value);
+  if(isNaN(value) || value < 0) {
+    input.value = '';
+  }
+}
+
+function handleEnterKey(event, section) {
+  if(event.key === "Enter") {
+    event.preventDefault();
+    const inputs = Array.from(document.querySelectorAll(`#${section}Form input[type='number']:not(:disabled)`));
+    const index = inputs.indexOf(event.target);
+    if(index > -1 && index < inputs.length - 1) {
+      inputs[index + 1].focus();
+    }
+  }
+}
+
+function showStatus(section, message, type = 'success') {
+  const statusEl = document.getElementById(section + 'StatusMessage');
+  statusEl.innerText = message;
+  statusEl.className = `status-message ${type === 'error' ? 'error' : ''}`;
+  statusEl.style.display = 'block';
   
   setTimeout(() => {
-    if (statusDiv.style.display === "block") {
-      statusDiv.style.display = "none";
+    if(statusEl.style.display === 'block') {
+      statusEl.style.display = 'none';
     }
-  }, 5000);
+  }, 10000);
 }
 
-// STOCK LEVEL
-async function loadStock() {
-  const tab = document.getElementById("tabContent");
-  tab.innerHTML = '<div style="text-align: center; padding: 40px;">Loading...</div>';
-  
-  try {
-    const r = await fetch(URL + "?action=getCurrentStock");
-    const d = await r.json();
-
-    const date = new Date(d.lastDate);
-    const formatted = date.toLocaleDateString('en-GB') + " " + date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-
-    let out = 0, low = 0, good = 0;
-
-    d.rows.forEach(r => {
-      const s = r.status.toLowerCase();
-      if (s.includes("out")) out++;
-      else if (s.includes("low")) low++;
-      else good++;
-    });
-
-    d.rows.sort((a, b) => {
-      function rank(s) {
-        s = s.status.toLowerCase();
-        if (s.includes("out")) return 1;
-        if (s.includes("low")) return 2;
-        return 3;
-      }
-      return rank(a) - rank(b);
-    });
-
-    let html = `
-      <div class="infoBox">
-        📊 Stock Level at <strong>${formatted}</strong>
-      </div>
-
-      <div class="counterRow">
-        <div class="counter red">🔴 ${out} Out of Stock</div>
-        <div class="counter yellow">🟡 ${low} Low Stock</div>
-        <div class="counter green">🟢 ${good} Good Stock</div>
-      </div>
-
-      <table class="dataTable">
-        <thead>
-          <tr>
-            <th>Prep Item</th>
-            <th>Stock</th>
-            <th>Par Level</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
-
-    d.rows.forEach(r => {
-      let cls = "good";
-      const s = r.status.toLowerCase();
-      if (s.includes("out")) cls = "out";
-      else if (s.includes("low")) cls = "low";
-
-      let icon = "🟢";
-      if (cls === "out") icon = "🔴";
-      if (cls === "low") icon = "🟡";
-
-      html += `
-        <tr>
-          <td class="prep">${r.prep}</td>
-          <td>${r.stock}</td>
-          <td>${r.par}</td>
-          <td><span class="status ${cls}">${icon} ${r.status}</span></td>
-        </tr>
-      `;
-    });
-
-    html += `
-        </tbody>
-      </table>
-    `;
-    
-    tab.innerHTML = html;
-  } catch (error) {
-    console.error("Error loading stock:", error);
-    tab.innerHTML = '<div class="status-message error">❌ Error loading stock data. Please refresh.</div>';
-  }
-}
-
-// PRODUCTION
-async function loadProduction() {
-  const tab = document.getElementById("tabContent");
-  tab.innerHTML = '<div style="text-align: center; padding: 40px;">Loading...</div>';
-  
-  try {
-    const r = await fetch(URL + "?action=getTomorrowProduction");
-    const data = await r.json();
-
-    let html = `
-      <div class="infoBox">
-        📈 Production needed for tomorrow
-      </div>
-      <table class="dataTable">
-        <thead>
-          <tr>
-            <th>Prep Item</th>
-            <th>Quantity</th>
-            <th>Unit</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
-
-    data.forEach(r => {
-      let qty = parseFloat(String(r.qty).replace(",", "."));
-      if (qty > 0) {
-        html += `
-          <tr>
-            <td class="prep">${r.prep}</td>
-            <td><strong>${Math.round(qty)}</strong></td>
-            <td>${r.unit}</td>
-          </tr>
-        `;
-      }
-    });
-
-    html += `
-        </tbody>
-      </table>
-    `;
-    
-    tab.innerHTML = html;
-  } catch (error) {
-    console.error("Error loading production:", error);
-    tab.innerHTML = '<div class="status-message error">❌ Error loading production data. Please refresh.</div>';
-  }
-}
-
-// PURCHASE
-async function loadPurchase() {
-  const tab = document.getElementById("tabContent");
-  tab.innerHTML = '<div style="text-align: center; padding: 40px;">Loading...</div>';
-  
-  try {
-    const r = await fetch(URL + "?action=getRecommendedPurchase");
-    const data = await r.json();
-
-    let html = `
-      <div class="infoBox">
-        🛒 Recommended purchase order
-      </div>
-      <table class="dataTable">
-        <thead>
-          <tr>
-            <th>Ingredient</th>
-            <th>Quantity to Order</th>
-            <th>Unit</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
-
-    data.forEach(r => {
-      html += `
-        <tr>
-          <td class="prep">${r.ingredient}</td>
-          <td><strong>${r.qty}</strong></td>
-          <td>${r.unit}</td>
-        </tr>
-      `;
-    });
-
-    html += `
-        </tbody>
-      </table>
-    `;
-    
-    tab.innerHTML = html;
-  } catch (error) {
-    console.error("Error loading purchase:", error);
-    tab.innerHTML = '<div class="status-message error">❌ Error loading purchase data. Please refresh.</div>';
-  }
-}
-
-// Initialize with form tab active
-showTab('form');
+// ==================== START APP ====================
+initializeApp();
 </script>
 
 </body>
