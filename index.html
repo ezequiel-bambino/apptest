@@ -2,8 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Bambino Pizza - Kitchen App</title>
-<link rel="manifest" href="manifest.json">
+<title>Merrion Shop - Kitchen Management</title>
 
 <style>
 * {
@@ -42,15 +41,17 @@ body {
   margin: 0 auto 15px;
 }
 
-h2 {
+.title {
+  font-size: 28px;
+  font-weight: 700;
   margin-bottom: 5px;
   color: #333;
 }
 
 .subtitle {
   color: #e63946;
-  font-size: 16px;
-  margin-bottom: 20px;
+  font-size: 14px;
+  margin-bottom: 15px;
   font-weight: 500;
 }
 
@@ -73,7 +74,7 @@ h2 {
   padding: 15px 20px;
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #666;
   cursor: pointer;
@@ -94,68 +95,12 @@ h2 {
 }
 
 /* Tab Content */
-.tab-content {
+.section {
   display: none;
 }
 
-.tab-content.active {
+.section.active {
   display: block;
-}
-
-/* Welcome Screen */
-.welcome-screen {
-  padding: 40px 20px;
-  text-align: center;
-}
-
-.welcome-icon {
-  font-size: 64px;
-  margin-bottom: 20px;
-}
-
-.welcome-text {
-  font-size: 18px;
-  color: #666;
-  margin-bottom: 30px;
-}
-
-.welcome-buttons {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-}
-
-.welcome-btn {
-  padding: 15px 30px;
-  font-size: 18px;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s;
-  min-width: 150px;
-}
-
-.welcome-btn.drops {
-  background: #e63946;
-  color: white;
-}
-
-.welcome-btn.drops:hover {
-  background: #c1121f;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(230, 57, 70, 0.3);
-}
-
-.welcome-btn.portions {
-  background: #e63946;
-  color: white;
-}
-
-.welcome-btn.portions:hover {
-  background: #c1121f;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(230, 57, 70, 0.3);
 }
 
 /* Form Styles */
@@ -193,27 +138,22 @@ h2 {
   opacity: 0.7;
 }
 
-/* Forecast Section - New unified style */
-.forecast-section {
-  margin-bottom: 25px;
-  text-align: left;
-}
-
+/* Forecast Card - Unified */
 .forecast-card {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 12px;
   padding: 20px;
+  margin-bottom: 25px;
   color: white;
 }
 
 .forecast-label {
-  display: block;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
 
 .forecast-label span {
@@ -245,100 +185,77 @@ h2 {
   opacity: 0.7;
 }
 
-.forecast-option {
-  padding: 10px;
-}
-
-/* Drop Section (hidden now, but kept for compatibility) */
-.drop-section {
-  margin-bottom: 25px;
+/* Section Title */
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
   text-align: left;
-}
-
-.drop-row {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.drop-label {
-  font-size: 16px;
-  font-weight: 600;
-  color: #555;
-  white-space: nowrap;
-}
-
-.drop-select {
-  flex: 1;
-  padding: 12px 15px;
-  font-size: 18px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  background: white;
-  cursor: pointer;
-}
-
-.drop-select:focus {
-  outline: none;
-  border-color: #e63946;
-}
-
-.drop-select:disabled {
-  background: #f5f5f5;
-  color: #999;
-  cursor: not-allowed;
-  opacity: 0.7;
+  margin: 25px 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e63946;
+  display: inline-block;
 }
 
 /* Items Grid - Card Style */
 .items-grid {
-  margin: 25px 0;
-  opacity: 1;
-  transition: opacity 0.3s;
+  margin: 20px 0;
 }
 
-.items-grid.loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 1fr auto auto auto;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-  padding: 12px;
+.stock-item, .closing-item {
   background: #fafafa;
-  border-radius: 10px;
-  transition: all 0.3s;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
   border: 1px solid #eee;
+  transition: all 0.3s;
 }
 
-.row:hover {
+.stock-item:hover, .closing-item:hover {
   background: #f5f5f5;
   transform: translateX(5px);
   border-color: #e63946;
 }
 
-.itemBox {
-  text-align: left;
-}
-
-.item-name {
-  font-weight: 600;
-  font-size: 16px;
+.pizza-name {
+  font-weight: 700;
+  font-size: 18px;
   color: #333;
+  margin-bottom: 15px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.item-unit {
-  font-size: 13px;
-  color: #888;
-  margin-top: 2px;
+.pizza-name::before {
+  content: "🍕";
 }
 
-input {
-  width: 70px;
+/* Input Groups */
+.stock-inputs, .waste-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.stock-input-group, .waste-input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stock-input-group label, .waste-input-group label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #666;
+  font-weight: 500;
+}
+
+.stock-input-group input, .waste-input-group input {
+  width: 100px;
   padding: 10px;
   font-size: 18px;
   text-align: center;
@@ -348,50 +265,137 @@ input {
   background: white;
 }
 
-input:focus {
+.stock-input-group input:focus, .waste-input-group input:focus {
   outline: none;
   border-color: #e63946;
 }
 
-input:disabled {
+.stock-input-group input:disabled, .waste-input-group input:disabled {
   background: #f5f5f5;
   color: #999;
-  cursor: not-allowed;
-  opacity: 0.7;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+/* Status Selector */
+.status-selector {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
 }
 
-input[type=number] {
-  -moz-appearance: textfield;
+.status-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.btn-qty {
-  width: 42px;
-  height: 42px;
-  font-size: 20px;
-  font-weight: bold;
-  border: none;
-  background: #e63946;
-  color: white;
-  border-radius: 8px;
+.status-option input[type="radio"] {
+  width: 20px;
+  height: 20px;
   cursor: pointer;
-  transition: all 0.3s;
+  accent-color: #e63946;
 }
 
-.btn-qty:hover:not(:disabled) {
-  background: #c1121f;
-  transform: scale(1.05);
+.status-option label {
+  font-size: 16px;
+  cursor: pointer;
+  color: #555;
 }
 
-.btn-qty:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  opacity: 0.5;
+/* Waste & Sellout Sections */
+.waste-section, .sellout-section {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.waste-section {
+  background: #fff3e0;
+  border-left: 4px solid #ff9800;
+}
+
+.sellout-section {
+  background: #e8f5e9;
+  border-left: 4px solid #4caf50;
+}
+
+.sellout-section input {
+  padding: 10px;
+  font-size: 18px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  width: 150px;
+}
+
+.sellout-section input:focus {
+  outline: none;
+  border-color: #4caf50;
+}
+
+/* General Note Section */
+.general-note-section {
+  margin-top: 25px;
+  padding: 20px;
+  background: #f0f7ff;
+  border-radius: 12px;
+  border-left: 4px solid #2196f3;
+}
+
+.general-note-section label {
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.general-note-section textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.general-note-section textarea:focus {
+  outline: none;
+  border-color: #2196f3;
+}
+
+/* Drop Data Grid */
+.drop-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.drop-header {
+  font-weight: 700;
+  font-size: 18px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  color: #333;
+}
+
+.drop-cell {
+  padding: 10px;
+  background: #fafafa;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.drop-cell.qty {
+  text-align: center;
+  font-weight: 600;
+  color: #e63946;
 }
 
 /* Action Buttons */
@@ -449,7 +453,7 @@ input[type=number] {
   width: 100%;
   padding: 12px;
   font-size: 18px;
-  background: #e63946;
+  background: #4a90e2;
   color: white;
   border: none;
   border-radius: 8px;
@@ -459,26 +463,25 @@ input[type=number] {
 }
 
 .btn-secondary:hover {
-  background: #c1121f;
+  background: #357abd;
   transform: translateY(-2px);
 }
 
-/* Back Button */
-.btn-back {
+.btn-refresh {
   width: 100%;
   padding: 12px;
   font-size: 16px;
-  background: #f0f0f0;
-  color: #666;
+  background: #4a90e2;
+  color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s;
   margin-top: 15px;
 }
 
-.btn-back:hover {
-  background: #e0e0e0;
+.btn-refresh:hover {
+  background: #357abd;
 }
 
 /* Status Messages */
@@ -493,12 +496,6 @@ input[type=number] {
   color: #2e7d32;
 }
 
-.status-message.error {
-  background: #ffebee;
-  border-left-color: #f44336;
-  color: #c62828;
-}
-
 .last-submission-info {
   margin: 15px 0;
   padding: 12px 15px;
@@ -511,10 +508,14 @@ input[type=number] {
 }
 
 .note {
-  margin-top: 15px;
   font-size: 13px;
   color: #888;
-  text-align: center;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.hidden {
+  display: none;
 }
 
 /* Responsive */
@@ -527,42 +528,26 @@ input[type=number] {
     padding: 15px;
   }
   
-  .row {
-    gap: 8px;
-    padding: 10px;
-  }
-  
-  .row:hover {
-    transform: translateX(0);
-  }
-  
-  input {
-    width: 60px;
-    font-size: 16px;
-    padding: 8px;
-  }
-  
-  .btn-qty {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-  }
-  
-  .welcome-buttons {
+  .stock-inputs, .waste-inputs {
     flex-direction: column;
+    gap: 15px;
   }
   
-  .welcome-btn {
-    width: 100%;
+  .stock-input-group input, .waste-input-group input {
+    width: 120px;
+  }
+  
+  .tab {
+    padding: 12px 10px;
+    font-size: 14px;
   }
   
   .forecast-card {
     padding: 15px;
   }
   
-  .forecast-select {
-    font-size: 16px;
-    padding: 12px;
+  .status-selector {
+    gap: 15px;
   }
 }
 </style>
@@ -571,706 +556,655 @@ input[type=number] {
 <body>
 
 <div class="container">
-  <img src="icon.png" class="logo" alt="Bambino Pizza">
+  <img src="icon.png" class="logo" alt="Merrion Shop Logo" onerror="this.style.display='none'">
   
-  <h2>🍕 Kitchen App</h2>
-  <div class="subtitle">Bambino Pizza Dublin</div>
-  
+  <div class="title">🛒 MERRION SHOP</div>
+  <div class="subtitle">Daily Management System</div>
   <div id="todayDate" class="date"></div>
   
   <!-- Tabs Navigation -->
   <div class="tabs">
-    <button class="tab" onclick="switchTab('drops')">📦 Drops</button>
-    <button class="tab" onclick="switchTab('portions')">🥘 Portions</button>
+    <button class="tab" onclick="showTab('stock')">📦 Stock Form</button>
+    <button class="tab" onclick="showTab('drop')">📋 Last Drop</button>
+    <button class="tab" onclick="showTab('closing')">📝 Closing Form</button>
   </div>
   
-  <!-- Welcome Screen (shown when no tab is active) -->
-  <div id="welcomeScreen" class="welcome-screen">
-    <div class="welcome-icon">👨‍🍳</div>
-    <div class="welcome-text">Select a section to begin</div>
-    <div class="welcome-buttons">
-      <button class="welcome-btn drops" onclick="switchTab('drops')">
-        📦 Drops
-      </button>
-      <button class="welcome-btn portions" onclick="switchTab('portions')">
-        🥘 Portions
-      </button>
-    </div>
-  </div>
-  
-  <!-- ==================== DROPS TAB ==================== -->
-  <div id="dropsTab" class="tab-content">
+  <!-- STOCK FORM -->
+  <div id="stock" class="section">
     <div class="user-section">
-      <label class="user-label">👤 Staff Name:</label>
-      <input 
-        type="text" 
-        id="dropsStaffName" 
-        class="user-input" 
-        placeholder="Enter your name"
-        autocomplete="off"
-      >
+      <label class="user-label">👤 Your Name:</label>
+      <input type="text" id="stockUser" class="user-input" placeholder="Enter your name" autocomplete="off">
     </div>
     
-    <!-- Unified Forecast Section -->
-    <div class="forecast-section">
-      <div class="forecast-card">
-        <label class="forecast-label">
-          <span>📊</span> Forecast:
-        </label>
-        <select id="forecastOption" class="forecast-select">
-          <option value="Evening Event / Busy">🌙 Evening Event / Busy</option>
-          <option value="Normal day / Good weather" selected>☀️ Normal day / Good weather</option>
-          <option value="Rain and storm coming">🌧️ Rain and storm coming</option>
-        </select>
+    <!-- Unified Forecast Card -->
+    <div class="forecast-card">
+      <div class="forecast-label">
+        <span>📊</span> Forecast:
       </div>
+      <select id="forecast" class="forecast-select">
+        <option value="Evening Event / Busy">🌙 Evening Event / Busy</option>
+        <option value="Normal day / Good weather" selected>☀️ Normal day / Good weather</option>
+        <option value="Rain and storm coming">🌧️ Rain and storm coming</option>
+      </select>
     </div>
     
-    <div id="dropsLastSubmission" class="last-submission-info" style="display: none;"></div>
-    <div id="dropsStatusMessage" class="status-message" style="display: none;"></div>
+    <div class="section-title">📦 Stock Info</div>
     
-    <div id="dropsForm" class="items-grid"></div>
+    <div id="stockForm" class="items-grid"></div>
     
-    <button id="dropsSubmitBtn" class="btn-primary" onclick="submitDrop()">
-      📤 SUBMIT DROP
-    </button>
-    
-    <button id="dropsNewSubmitBtn" class="btn-secondary" onclick="resetDropsForm()" style="display: none;">
-      🔄 NEW SUBMISSION
-    </button>
-    
-    <button class="btn-back" onclick="backToWelcome()">
-      ← Back to Menu
-    </button>
-    
-    <div class="note">
-      ⚠️ Verify all quantities before submitting
-    </div>
+    <button id="submitStockBtn" class="btn-primary" onclick="submitStock()">📤 SUBMIT STOCK</button>
+    <button id="newBtn" class="btn-secondary hidden" onclick="resetForm()">🔄 NEW SUBMISSION</button>
+    <div id="lastUpdate" class="last-submission-info hidden"></div>
   </div>
   
-  <!-- ==================== PORTIONS TAB ==================== -->
-  <div id="portionsTab" class="tab-content">
+  <!-- DROP SECTION -->
+  <div id="drop" class="section">
+    <div class="section-title">📋 Last Drop Info</div>
+    <div id="dropData" class="drop-grid">
+      <div class="drop-header">🍕 Pizza</div>
+      <div class="drop-header">📦 QTY</div>
+    </div>
+    <button class="btn-refresh" onclick="loadDrop()">🔄 Refresh Data</button>
+  </div>
+  
+  <!-- CLOSING FORM -->
+  <div id="closing" class="section">
     <div class="user-section">
-      <label class="user-label">👤 Staff Name:</label>
-      <input 
-        type="text" 
-        id="portionsStaffName" 
-        class="user-input" 
-        placeholder="Enter your name"
-        autocomplete="off"
-      >
+      <label class="user-label">👤 Your Name:</label>
+      <input type="text" id="closingUser" class="user-input" placeholder="Enter your name" autocomplete="off">
     </div>
     
-    <div id="portionsLastSubmission" class="last-submission-info" style="display: none;"></div>
-    <div id="portionsStatusMessage" class="status-message" style="display: none;"></div>
+    <div class="section-title">📝 End of Day Report</div>
+    <div class="note" style="margin-bottom: 15px;">For each pizza, indicate if it sold out or if there was waste</div>
     
-    <div id="portionsForm" class="items-grid"></div>
+    <div id="closingForm" class="items-grid"></div>
     
-    <button id="portionsSubmitBtn" class="btn-primary" onclick="submitPortions()">
-      📤 SUBMIT PORTIONS
-    </button>
-    
-    <button id="portionsNewSubmitBtn" class="btn-secondary" onclick="resetPortionsForm()" style="display: none;">
-      🔄 NEW SUBMISSION
-    </button>
-    
-    <button class="btn-back" onclick="backToWelcome()">
-      ← Back to Menu
-    </button>
-    
-    <div class="note">
-      ⚠️ Verify all quantities before submitting
+    <!-- General notes field -->
+    <div class="general-note-section">
+      <label><span>📝</span> Additional Notes:</label>
+      <textarea id="generalNote" placeholder="Any additional comments about today's service..."></textarea>
     </div>
+    
+    <button id="submitClosingBtn" class="btn-primary" onclick="submitClosing()">📤 SUBMIT REPORT</button>
+    <button id="newClosingBtn" class="btn-secondary hidden" onclick="resetClosingForm()">🔄 NEW REPORT</button>
+    <div id="lastClosingUpdate" class="last-submission-info hidden"></div>
   </div>
 </div>
 
 <script>
-// ==================== CONFIGURATION ====================
-const ENDPOINTS = {
-  DROPS: "https://script.google.com/macros/s/AKfycbxguKcw1zBOScTEsrmYbRdqgSH0y6qcgMxvpYDCxvL-CKAr_8noC_mnqOEDMG9H6yY/exec",
-  PORTIONS: "https://script.google.com/macros/s/AKfycbxOkG1NhG8nCPNc04kNpAmK1m3BGJorHCpCKvFkhLZghQ2T1HHUWq3G9DGX1taks6cy/exec"
-};
+const URL = "https://script.google.com/macros/s/AKfycbwAsjdtQi-Z4SekT-bJIHJPSxkzPVtulT5PmT6BHc2nGS68EFXaG5l5UGsqk8mgD3sr/exec";
 
-// ==================== GLOBAL STATE ====================
-window.dropsLoaded = false;
-window.portionsLoaded = false;
-window.lastDropsSubmission = null;
-window.lastPortionsSubmission = null;
-
-// ==================== INITIALIZATION ====================
-function initializeApp() {
-  setDate();
-  loadSavedState();
+/* ===============================
+   INPUT UTILITIES
+=============================== */
+function setupNumberInput(input) {
+  input.addEventListener('focus', function() {
+    if (this.value === '0') {
+      this.select();
+    }
+  });
   
-  // Check if we should show a tab directly based on saved state
-  const urlParams = new URLSearchParams(window.location.search);
-  const tabParam = urlParams.get('tab');
-  if(tabParam === 'drops' || tabParam === 'portions') {
-    switchTab(tabParam);
-  }
+  input.addEventListener('click', function() {
+    if (this.value === '0') {
+      this.select();
+    }
+  });
+  
+  input.addEventListener('keypress', function(e) {
+    const char = String.fromCharCode(e.which);
+    if (!/[0-9]/.test(char)) {
+      e.preventDefault();
+    }
+  });
+  
+  input.addEventListener('blur', function() {
+    if (this.value === '' || this.value === null) {
+      this.value = '0';
+    }
+  });
 }
 
-// Load saved state from localStorage and apply it
-function loadSavedState() {
-  // Load Drops saved state
-  const savedDrops = localStorage.getItem('kitchen_last_drops_submission');
-  if(savedDrops) {
-    try {
-      window.lastDropsSubmission = JSON.parse(savedDrops);
-      console.log('Loaded drops submission:', window.lastDropsSubmission);
-    } catch(e) {
-      console.error('Error parsing drops submission:', e);
-      localStorage.removeItem('kitchen_last_drops_submission');
-    }
-  }
-  
-  // Load Portions saved state
-  const savedPortions = localStorage.getItem('kitchen_last_portions_submission');
-  if(savedPortions) {
-    try {
-      window.lastPortionsSubmission = JSON.parse(savedPortions);
-      console.log('Loaded portions submission:', window.lastPortionsSubmission);
-    } catch(e) {
-      console.error('Error parsing portions submission:', e);
-      localStorage.removeItem('kitchen_last_portions_submission');
-    }
-  }
+/* ===============================
+   DATE
+=============================== */
+function setDate(){
+  const today = new Date();
+  const options = {
+    weekday:'long',
+    day:'numeric',
+    month:'long',
+    year:'numeric'
+  };
+  document.getElementById("todayDate").innerText = today.toLocaleDateString('en-GB', options);
 }
 
-// ==================== TAB SWITCHING ====================
-function switchTab(tabName) {
-  document.getElementById("welcomeScreen").style.display = "none";
-  
+/* ===============================
+   TAB CONTROL
+=============================== */
+function setActiveTab(tabName) {
   document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.remove('active');
   });
   
   const tabs = document.querySelectorAll('.tab');
-  if(tabName === 'drops') {
-    tabs[0].classList.add('active');
-  } else {
-    tabs[1].classList.add('active');
-  }
-  
-  document.querySelectorAll('.tab-content').forEach(content => {
-    content.classList.remove('active');
-  });
-  document.getElementById(tabName + 'Tab').classList.add('active');
-  
-  // Load data when tab is selected
-  if(tabName === 'drops') {
-    if(!window.dropsLoaded) {
-      loadDropsItems();
-      window.dropsLoaded = true;
-    } else {
-      applyDropsLockedState();
-    }
-  }
-  
-  if(tabName === 'portions') {
-    if(!window.portionsLoaded) {
-      loadPortionsItems();
-      window.portionsLoaded = true;
-    } else {
-      applyPortionsLockedState();
-    }
+  const tabMap = { 'stock': 0, 'drop': 1, 'closing': 2 };
+  if (tabs[tabMap[tabName]]) {
+    tabs[tabMap[tabName]].classList.add('active');
   }
 }
 
-function backToWelcome() {
-  document.querySelectorAll('.tab-content').forEach(content => {
-    content.classList.remove('active');
-  });
+function showTab(tab){
+  setActiveTab(tab);
   
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.classList.remove('active');
-  });
-  
-  document.getElementById("welcomeScreen").style.display = "block";
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById(tab).classList.add("active");
+
+  if(tab === "stock" && !window.stockLoaded){
+    loadPizzas();
+    window.stockLoaded = true;
+  }
+
+  if(tab === "drop"){
+    loadDrop();
+  }
+
+  if(tab === "closing" && !window.closingLoaded){
+    loadClosing();
+    window.closingLoaded = true;
+  }
 }
 
-// ==================== DATE ====================
-function setDate() {
-  const today = new Date();
-  const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-  document.getElementById("todayDate").innerText = today.toLocaleDateString('en-GB', options);
-}
+/* ===============================
+   STOCK FORM FUNCTIONS
+=============================== */
 
-// ==================== DROPS FUNCTIONS ====================
-async function loadDropsItems() {
+async function loadPizzas(){
   try {
-    const res = await fetch(`${ENDPOINTS.DROPS}?action=getPizzas`);
-    const data = await res.json();
-    renderDropsForm(data);
-  } catch(error) {
-    showStatus('drops', 'Error loading pizzas. Please refresh.', 'error');
-  }
-}
+    const res = await fetch(`${URL}?action=getPizzas`);
+    if (!res.ok) throw new Error('Network response was not ok');
+    const pizzas = await res.json();
 
-function renderDropsForm(items) {
-  const container = document.getElementById("dropsForm");
-  container.innerHTML = "";
-  
-  // Check if there's a locked submission
-  const hasLockedSubmission = window.lastDropsSubmission !== null;
-  
-  items.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "row";
-    
-    const itemId = item.replace(/[^a-zA-Z0-9]/g, '_');
-    
-    // Get saved value if exists
-    let savedValue = '';
-    if(hasLockedSubmission && window.lastDropsSubmission && window.lastDropsSubmission.data) {
-      const savedItem = window.lastDropsSubmission.data.pizzas.find(p => p.pizza === item);
-      if(savedItem) savedValue = savedItem.quantity;
-    }
-    
-    div.innerHTML = `
-      <div class="itemBox">
-        <div class="item-name">${item}</div>
-      </div>
-      <button class="btn-qty" onclick="adjustDropsQuantity('${itemId}', -1)">−</button>
-      <input 
-        type="number"
-        id="drops_${itemId}"
-        data-item-name="${item}"
-        min="0"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        placeholder="0"
-        value="${savedValue}"
-        onkeydown="handleEnterKey(event, 'drops')"
-        oninput="validateInput(this)"
-        ${hasLockedSubmission ? 'disabled' : ''}
-      >
-      <button class="btn-qty" onclick="adjustDropsQuantity('${itemId}', 1)" ${hasLockedSubmission ? 'disabled' : ''}>+</button>
-    `;
-    
-    container.appendChild(div);
-  });
-  
-  // Apply locked state to the whole form
-  if(hasLockedSubmission && window.lastDropsSubmission) {
-    document.getElementById("dropsStaffName").value = window.lastDropsSubmission.staffName || '';
-    document.getElementById("dropsStaffName").disabled = true;
-    
-    if(window.lastDropsSubmission.forecast) {
-      document.getElementById("forecastOption").value = window.lastDropsSubmission.forecast;
-    }
-    document.getElementById("forecastOption").disabled = true;
-    
-    document.getElementById("dropsSubmitBtn").style.display = 'none';
-    document.getElementById("dropsNewSubmitBtn").style.display = 'block';
-    
-    displayLastDropsSubmission();
-  } else {
-    document.getElementById("dropsStaffName").disabled = false;
-    document.getElementById("forecastOption").disabled = false;
-    document.getElementById("forecastOption").value = "Normal day / Good weather";
-    document.getElementById("dropsSubmitBtn").style.display = 'block';
-    document.getElementById("dropsNewSubmitBtn").style.display = 'none';
-    document.getElementById("dropsStaffName").focus();
-  }
-}
+    const formDiv = document.getElementById("stockForm");
+    formDiv.innerHTML = "";
 
-function applyDropsLockedState() {
-  const hasLockedSubmission = window.lastDropsSubmission !== null;
-  
-  if(hasLockedSubmission) {
-    const inputs = document.querySelectorAll("#dropsForm input");
-    const buttons = document.querySelectorAll("#dropsForm .btn-qty");
-    
-    inputs.forEach(input => input.disabled = true);
-    buttons.forEach(btn => btn.disabled = true);
-    
-    document.getElementById("dropsStaffName").disabled = true;
-    document.getElementById("forecastOption").disabled = true;
-    
-    document.getElementById("dropsSubmitBtn").style.display = 'none';
-    document.getElementById("dropsNewSubmitBtn").style.display = 'block';
-  }
-}
-
-function adjustDropsQuantity(id, delta) {
-  const input = document.getElementById('drops_' + id);
-  if(!input || input.disabled) return;
-  
-  let current = parseInt(input.value) || 0;
-  current = Math.max(0, current + delta);
-  input.value = current || '';
-}
-
-async function submitDrop() {
-  const staffName = document.getElementById("dropsStaffName").value.trim();
-  if(!staffName) {
-    showStatus('drops', 'Please enter staff name', 'error');
-    document.getElementById("dropsStaffName").focus();
-    return;
-  }
-  
-  const forecast = document.getElementById("forecastOption").value;
-  
-  const inputs = document.querySelectorAll("#dropsForm input[type='number']");
-  const pizzas = [];
-  
-  inputs.forEach(input => {
-    pizzas.push({
-      pizza: input.dataset.itemName,
-      quantity: parseInt(input.value) || 0
+    pizzas.forEach(p => {
+      const pizzaName = p.replace(/[^a-zA-Z0-9]/g, '_');
+      
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'stock-item';
+      itemDiv.innerHTML = `
+        <div class="pizza-name">${p}</div>
+        <div class="stock-inputs">
+          <div class="stock-input-group">
+            <label>🍕 Whole Pies</label>
+            <input type="number" id="whole_${pizzaName}" class="whole" min="0" value="0" placeholder="0">
+          </div>
+          <div class="stock-input-group">
+            <label>🔪 Slices</label>
+            <input type="number" id="slice_${pizzaName}" class="slice" min="0" max="7" step="1" value="0" placeholder="0">
+          </div>
+        </div>
+      `;
+      
+      formDiv.appendChild(itemDiv);
+      
+      const wholeInput = document.getElementById(`whole_${pizzaName}`);
+      const sliceInput = document.getElementById(`slice_${pizzaName}`);
+      setupNumberInput(wholeInput);
+      setupNumberInput(sliceInput);
     });
-  });
-  
-  const totalPizzas = pizzas.reduce((sum, p) => sum + p.quantity, 0);
-  
-  if(!confirm(`Confirm submission?\n\n👤 Staff: ${staffName}\n📊 Forecast: ${forecast}\n🍕 Total pizzas: ${totalPizzas}`)) {
+
+    const saved = JSON.parse(localStorage.getItem("lastStockSubmit") || "{}");
+    if(saved.pizzas && saved.user){
+      saved.pizzas.forEach(p=>{
+        const whole = Math.floor(p.qty);
+        const slice = Math.round((p.qty - whole) * 8);
+        const pizzaName = p.name.replace(/[^a-zA-Z0-9]/g, '_');
+        const elWhole = document.getElementById("whole_" + pizzaName);
+        const elSlice = document.getElementById("slice_" + pizzaName);
+        if(elWhole) elWhole.value = whole;
+        if(elSlice) elSlice.value = slice;
+      });
+      if(saved.user) document.getElementById("stockUser").value = saved.user;
+      if(saved.forecast) document.getElementById("forecast").value = saved.forecast;
+      if(saved.timestamp) showLastUpdate(saved.timestamp);
+      
+      document.getElementById("newBtn").classList.remove("hidden");
+      disableStockForm();
+    }
+  } catch (error) {
+    console.error('Error loading pizzas:', error);
+    alert('Error loading pizza list. Please try again.');
+  }
+}
+
+function disableStockForm(){
+  document.getElementById("stockUser").disabled = true;
+  document.getElementById("forecast").disabled = true;
+  document.querySelectorAll("#stockForm input").forEach(input => input.disabled = true);
+  document.getElementById("submitStockBtn").disabled = true;
+}
+
+function enableStockForm(){
+  document.getElementById("stockUser").disabled = false;
+  document.getElementById("forecast").disabled = false;
+  document.querySelectorAll("#stockForm input").forEach(input => input.disabled = false);
+  document.getElementById("submitStockBtn").disabled = false;
+}
+
+async function submitStock(){
+  const user = document.getElementById("stockUser").value.trim();
+  const forecast = document.getElementById("forecast").value;
+
+  if(!user){
+    alert("Please enter your name");
     return;
   }
   
-  // Lock form immediately
-  lockDropsForm();
-  
-  const submitBtn = document.getElementById("dropsSubmitBtn");
-  submitBtn.classList.add('loading');
-  
-  const payload = {
-    staffName: staffName,
-    forecast: forecast,
-    pizzas: pizzas
-  };
-  
-  try {
-    const res = await fetch(`${ENDPOINTS.DROPS}?action=submitDrop&data=${encodeURIComponent(JSON.stringify(payload))}`);
-    const result = await res.json();
-    
-    submitBtn.classList.remove('loading');
-    
-    if(result.status === "ok") {
-      // Save submission to localStorage with all form data
-      const submission = {
-        timestamp: new Date().toISOString(),
-        staffName: staffName,
-        forecast: forecast,
-        data: payload
-      };
-      localStorage.setItem('kitchen_last_drops_submission', JSON.stringify(submission));
-      window.lastDropsSubmission = submission;
-      
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-      showStatus('drops', `✅ Submitted at ${timeStr} by ${staffName} | Forecast: ${forecast}`, 'success');
-      displayLastDropsSubmission();
-      
-      document.getElementById("dropsSubmitBtn").style.display = 'none';
-      document.getElementById("dropsNewSubmitBtn").style.display = 'block';
-    } else {
-      showStatus('drops', 'Error saving data. Please try again.', 'error');
-      unlockDropsForm();
-    }
-  } catch(error) {
-    submitBtn.classList.remove('loading');
-    showStatus('drops', 'Connection error. Please check your internet.', 'error');
-    unlockDropsForm();
+  if(!forecast){
+    alert("Please select a forecast option");
+    return;
   }
-}
 
-function lockDropsForm() {
-  document.getElementById("dropsStaffName").disabled = true;
-  document.getElementById("forecastOption").disabled = true;
+  let valid = true;
+  const pizzaData = [];
   
-  document.querySelectorAll("#dropsForm input").forEach(input => input.disabled = true);
-  document.querySelectorAll("#dropsForm .btn-qty").forEach(btn => btn.disabled = true);
-  document.getElementById("dropsSubmitBtn").disabled = true;
-}
+  document.querySelectorAll("[id^=whole_]").forEach(wholeInput => {
+    const pizzaName = wholeInput.id.replace("whole_", "");
+    const sliceInput = document.getElementById("slice_" + pizzaName);
+    
+    if(wholeInput.value === "" || sliceInput.value === ""){
+      valid = false;
+      return;
+    }
+    
+    const whole = parseInt(wholeInput.value) || 0;
+    const slice = parseInt(sliceInput.value) || 0;
+    
+    if(slice > 7){
+      alert(`Slices must be between 0 and 7`);
+      valid = false;
+      return;
+    }
+    
+    const originalName = getOriginalPizzaName(pizzaName);
+    const total = whole + (slice/8);
+    pizzaData.push({ name: originalName, qty: total });
+  });
 
-function unlockDropsForm() {
-  document.getElementById("dropsStaffName").disabled = false;
-  document.getElementById("forecastOption").disabled = false;
+  if(!valid){ 
+    alert("Please fill all pizza fields with valid numbers"); 
+    return; 
+  }
   
-  document.querySelectorAll("#dropsForm input").forEach(input => input.disabled = false);
-  document.querySelectorAll("#dropsForm .btn-qty").forEach(btn => btn.disabled = false);
-  document.getElementById("dropsSubmitBtn").disabled = false;
-}
+  if(!confirm(`Confirm stock submission?\n\n👤 Staff: ${user}\n📊 Forecast: ${forecast}`)) return;
 
-function resetDropsForm() {
-  // Clear saved submission
-  localStorage.removeItem('kitchen_last_drops_submission');
-  window.lastDropsSubmission = null;
-  
-  unlockDropsForm();
-  
-  document.getElementById("dropsStaffName").value = '';
-  document.getElementById("forecastOption").value = "Normal day / Good weather";
-  
-  document.querySelectorAll("#dropsForm input").forEach(input => input.value = '');
-  
-  document.getElementById("dropsStatusMessage").style.display = 'none';
-  document.getElementById("dropsLastSubmission").style.display = 'none';
-  
-  document.getElementById("dropsSubmitBtn").style.display = 'block';
-  document.getElementById("dropsSubmitBtn").disabled = false;
-  document.getElementById("dropsSubmitBtn").classList.remove('loading');
-  document.getElementById("dropsNewSubmitBtn").style.display = 'none';
-  
-  document.getElementById("dropsStaffName").focus();
-}
-
-function displayLastDropsSubmission() {
-  if(!window.lastDropsSubmission) return;
-  
-  const sub = window.lastDropsSubmission;
-  const date = new Date(sub.timestamp);
-  const dateStr = date.toLocaleDateString('en-GB');
-  const timeStr = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-  
-  const el = document.getElementById("dropsLastSubmission");
-  el.innerHTML = `📋 Last submission: ${sub.staffName} on ${dateStr} at ${timeStr}<br>📊 Forecast: ${sub.forecast || 'Not specified'}`;
-  el.style.display = 'block';
-}
-
-// ==================== PORTIONS FUNCTIONS ====================
-async function loadPortionsItems() {
   try {
-    const res = await fetch(`${ENDPOINTS.PORTIONS}?action=getPortionablePreps`);
+    disableStockForm();
+    const submitBtn = document.getElementById("submitStockBtn");
+    submitBtn.classList.add('loading');
+
+    const res = await fetch(`${URL}?action=submitStock&data=${encodeURIComponent(JSON.stringify({
+      user, forecast, pizzas: pizzaData
+    }))}`);
+    
+    if (!res.ok) throw new Error('Submission failed');
     const data = await res.json();
-    renderPortionsForm(data);
-  } catch(error) {
-    console.error('Error loading portions:', error);
-    showStatus('portions', 'Error loading preps. Please refresh.', 'error');
+
+    submitBtn.classList.remove('loading');
+    alert("✅ Stock data submitted successfully!");
+
+    const savedPizzas = pizzaData.map(p => ({
+      name: p.name,
+      qty: p.qty
+    }));
+    
+    localStorage.setItem("lastStockSubmit", JSON.stringify({
+      user, forecast, pizzas: savedPizzas, timestamp: data.timestamp
+    }));
+
+    showLastUpdate(data.timestamp);
+    document.getElementById("newBtn").classList.remove("hidden");
+  } catch (error) {
+    console.error('Error submitting stock:', error);
+    document.getElementById("submitStockBtn").classList.remove('loading');
+    alert('Error submitting data. Please try again.');
+    enableStockForm();
   }
 }
 
-function renderPortionsForm(items) {
-  const container = document.getElementById("portionsForm");
-  container.innerHTML = "";
-  
-  const hasLockedSubmission = window.lastPortionsSubmission !== null;
-  
-  items.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "row";
+function getOriginalPizzaName(encodedName) {
+  const saved = JSON.parse(localStorage.getItem("lastStockSubmit") || "{}");
+  if (saved.pizzas) {
+    const found = saved.pizzas.find(p => p.name.replace(/[^a-zA-Z0-9]/g, '_') === encodedName);
+    if (found) return found.name;
+  }
+  return encodedName.replace(/_/g, ' ');
+}
+
+function resetForm(){
+  if(confirm("Are you sure you want to start a new stock form? This will clear all current data.")){
+    document.getElementById("stockUser").value = "";
+    document.getElementById("forecast").value = "Normal day / Good weather";
+    document.querySelectorAll("#stockForm input").forEach(input => input.value = "0");
     
-    const itemId = item.name.replace(/[^a-zA-Z0-9]/g, '_');
+    enableStockForm();
     
-    let savedValue = '';
-    if(hasLockedSubmission && window.lastPortionsSubmission && window.lastPortionsSubmission.data) {
-      const savedItem = window.lastPortionsSubmission.data.preps.find(p => p.name === item.name);
-      if(savedItem) savedValue = savedItem.quantity;
-    }
-    
-    div.innerHTML = `
-      <div class="itemBox">
-        <div class="item-name">${item.name}</div>
-        <div class="item-unit">${item.unit || ''}</div>
-      </div>
-      <button class="btn-qty" onclick="adjustPortionsQuantity('${itemId}', -1)">−</button>
-      <input 
-        type="number"
-        id="portions_${itemId}"
-        data-item-name="${item.name}"
-        min="0"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        placeholder="0"
-        value="${savedValue}"
-        onkeydown="handleEnterKey(event, 'portions')"
-        oninput="validateInput(this)"
-        ${hasLockedSubmission ? 'disabled' : ''}
-      >
-      <button class="btn-qty" onclick="adjustPortionsQuantity('${itemId}', 1)" ${hasLockedSubmission ? 'disabled' : ''}>+</button>
-    `;
-    
-    container.appendChild(div);
-  });
-  
-  if(hasLockedSubmission && window.lastPortionsSubmission) {
-    document.getElementById("portionsStaffName").value = window.lastPortionsSubmission.staffName || '';
-    document.getElementById("portionsStaffName").disabled = true;
-    
-    document.getElementById("portionsSubmitBtn").style.display = 'none';
-    document.getElementById("portionsNewSubmitBtn").style.display = 'block';
-    
-    displayLastPortionsSubmission();
-  } else {
-    document.getElementById("portionsStaffName").disabled = false;
-    document.getElementById("portionsSubmitBtn").style.display = 'block';
-    document.getElementById("portionsNewSubmitBtn").style.display = 'none';
-    document.getElementById("portionsStaffName").focus();
+    document.getElementById("newBtn").classList.add("hidden");
+    document.getElementById("lastUpdate").classList.add("hidden");
+    localStorage.removeItem("lastStockSubmit");
   }
 }
 
-function applyPortionsLockedState() {
-  const hasLockedSubmission = window.lastPortionsSubmission !== null;
+function showLastUpdate(timestamp){
+  if(!timestamp) return;
   
-  if(hasLockedSubmission) {
-    const inputs = document.querySelectorAll("#portionsForm input");
-    const buttons = document.querySelectorAll("#portionsForm .btn-qty");
-    
-    inputs.forEach(input => input.disabled = true);
-    buttons.forEach(btn => btn.disabled = true);
-    
-    document.getElementById("portionsStaffName").disabled = true;
-    
-    document.getElementById("portionsSubmitBtn").style.display = 'none';
-    document.getElementById("portionsNewSubmitBtn").style.display = 'block';
-  }
+  const d = new Date(timestamp);
+  const text = d.toLocaleDateString('en-GB') + " at " + d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+  const el = document.getElementById("lastUpdate");
+  el.innerHTML = `📋 Last submitted: ${text}`;
+  el.classList.remove("hidden");
 }
 
-function adjustPortionsQuantity(id, delta) {
-  const input = document.getElementById('portions_' + id);
-  if(!input || input.disabled) return;
-  
-  let current = parseInt(input.value) || 0;
-  current = Math.max(0, current + delta);
-  input.value = current || '';
-}
-
-async function submitPortions() {
-  const staffName = document.getElementById("portionsStaffName").value.trim();
-  if(!staffName) {
-    showStatus('portions', 'Please enter staff name', 'error');
-    document.getElementById("portionsStaffName").focus();
-    return;
-  }
-  
-  const inputs = document.querySelectorAll("#portionsForm input[type='number']");
-  const preps = [];
-  
-  inputs.forEach(input => {
-    preps.push({
-      name: input.dataset.itemName,
-      quantity: parseInt(input.value) || 0
-    });
-  });
-  
-  if(!confirm(`Confirm Portions submission?\n\n👤 Staff: ${staffName}\n📦 Items recorded: ${preps.length}`)) {
-    return;
-  }
-  
-  lockPortionsForm();
-  
-  const submitBtn = document.getElementById("portionsSubmitBtn");
-  submitBtn.classList.add('loading');
-  
-  const payload = {
-    staffName: staffName,
-    preps: preps
-  };
-  
+async function loadDrop(){
   try {
-    const res = await fetch(`${ENDPOINTS.PORTIONS}?action=submitPortions&data=${encodeURIComponent(JSON.stringify(payload))}`);
-    const result = await res.json();
+    const res = await fetch(`${URL}?action=getLastDrop`);
+    if (!res.ok) throw new Error('Network response was not ok');
+    const data = await res.json();
     
-    submitBtn.classList.remove('loading');
+    const div = document.getElementById("dropData");
+    div.innerHTML = `<div class="drop-header">🍕 Pizza</div><div class="drop-header">📦 QTY</div>`;
     
-    if(result.status === "ok") {
-      const submission = {
-        timestamp: new Date().toISOString(),
-        staffName: staffName,
-        data: payload
-      };
-      localStorage.setItem('kitchen_last_portions_submission', JSON.stringify(submission));
-      window.lastPortionsSubmission = submission;
-      
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-      showStatus('portions', `✅ Portions submitted at ${timeStr} by ${staffName}`, 'success');
-      displayLastPortionsSubmission();
-      
-      document.getElementById("portionsSubmitBtn").style.display = 'none';
-      document.getElementById("portionsNewSubmitBtn").style.display = 'block';
+    if(data.length === 0){
+      div.innerHTML += `<div class="drop-cell" style="grid-column:1/-1;text-align:center;">No drop data available</div>`;
     } else {
-      showStatus('portions', 'Error saving data. Please try again.', 'error');
-      unlockPortionsForm();
+      data.forEach(d=>{
+        div.innerHTML += `<div class="drop-cell">${d.pizza || 'Unknown'}</div><div class="drop-cell qty">${d.lastDrop || 0}</div>`;
+      });
     }
-  } catch(error) {
+  } catch (error) {
+    console.error('Error loading drop data:', error);
+    const div = document.getElementById("dropData");
+    div.innerHTML = `<div class="drop-header">🍕 Pizza</div><div class="drop-header">📦 QTY</div>`;
+    div.innerHTML += `<div class="drop-cell" style="grid-column:1/-1;text-align:center;color:red;">❌ Error loading data</div>`;
+  }
+}
+
+/* ===============================
+   CLOSING FORM FUNCTIONS
+=============================== */
+
+async function loadClosing(){
+  try {
+    const res = await fetch(`${URL}?action=getPizzas`);
+    if (!res.ok) throw new Error('Network response was not ok');
+    const pizzas = await res.json();
+    
+    const formDiv = document.getElementById("closingForm");
+    formDiv.innerHTML = "";
+
+    pizzas.forEach(p => {
+      const pizzaName = p.replace(/[^a-zA-Z0-9]/g, '_');
+      
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'closing-item';
+      itemDiv.innerHTML = `
+        <div class="pizza-name">${p}</div>
+        
+        <div class="status-selector">
+          <label class="status-option">
+            <input type="radio" name="status_${pizzaName}" id="waste_${pizzaName}" value="waste" checked>
+            <span>⚠️ Had Waste</span>
+          </label>
+          <label class="status-option">
+            <input type="radio" name="status_${pizzaName}" id="soldout_${pizzaName}" value="soldout">
+            <span>✅ Sold Out</span>
+          </label>
+        </div>
+        
+        <div id="wasteSection_${pizzaName}" class="waste-section">
+          <div class="waste-inputs">
+            <div class="waste-input-group">
+              <label>🍕 Whole Pies</label>
+              <input type="number" id="wasteWhole_${pizzaName}" min="0" value="0" placeholder="0">
+            </div>
+            <div class="waste-input-group">
+              <label>🔪 Slices</label>
+              <input type="number" id="wasteSlice_${pizzaName}" min="0" max="7" value="0" placeholder="0">
+            </div>
+          </div>
+          <div class="note">Enter the amount left at end of day</div>
+        </div>
+        
+        <div id="selloutSection_${pizzaName}" class="sellout-section hidden">
+          <label>⏰ Sold out at:</label>
+          <input type="time" id="sellout_${pizzaName}" value="">
+          <div class="note">Time when the last slice was sold</div>
+        </div>
+      `;
+      
+      formDiv.appendChild(itemDiv);
+      
+      const wasteWhole = document.getElementById(`wasteWhole_${pizzaName}`);
+      const wasteSlice = document.getElementById(`wasteSlice_${pizzaName}`);
+      setupNumberInput(wasteWhole);
+      setupNumberInput(wasteSlice);
+      
+      const wasteRadio = document.getElementById(`waste_${pizzaName}`);
+      const soldoutRadio = document.getElementById(`soldout_${pizzaName}`);
+      const wasteSection = document.getElementById(`wasteSection_${pizzaName}`);
+      const selloutSection = document.getElementById(`selloutSection_${pizzaName}`);
+      
+      wasteRadio.addEventListener('change', () => {
+        wasteSection.classList.remove('hidden');
+        selloutSection.classList.add('hidden');
+        document.getElementById(`sellout_${pizzaName}`).value = '';
+      });
+      
+      soldoutRadio.addEventListener('change', () => {
+        wasteSection.classList.add('hidden');
+        selloutSection.classList.remove('hidden');
+        document.getElementById(`wasteWhole_${pizzaName}`).value = '0';
+        document.getElementById(`wasteSlice_${pizzaName}`).value = '0';
+      });
+    });
+
+    const saved = JSON.parse(localStorage.getItem("lastClosingSubmit") || "{}");
+    if(saved.pizzas && saved.user){
+      saved.pizzas.forEach(p => {
+        const pizzaName = p.name.replace(/[^a-zA-Z0-9]/g, '_');
+        
+        if(p.selloutTime) {
+          const soldoutRadio = document.getElementById(`soldout_${pizzaName}`);
+          if(soldoutRadio) {
+            soldoutRadio.checked = true;
+            document.getElementById(`wasteSection_${pizzaName}`).classList.add('hidden');
+            document.getElementById(`selloutSection_${pizzaName}`).classList.remove('hidden');
+            document.getElementById(`sellout_${pizzaName}`).value = p.selloutTime;
+          }
+        } else if(p.waste !== undefined) {
+          const wasteRadio = document.getElementById(`waste_${pizzaName}`);
+          if(wasteRadio) {
+            wasteRadio.checked = true;
+            document.getElementById(`wasteWhole_${pizzaName}`).value = Math.floor(p.waste);
+            document.getElementById(`wasteSlice_${pizzaName}`).value = Math.round((p.waste - Math.floor(p.waste)) * 8);
+          }
+        }
+      });
+      
+      if(saved.user) document.getElementById("closingUser").value = saved.user;
+      if(saved.note) document.getElementById("generalNote").value = saved.note;
+      if(saved.timestamp) showLastClosingUpdate(saved.timestamp);
+      
+      document.getElementById("newClosingBtn").classList.remove("hidden");
+      disableClosingForm();
+    }
+  } catch (error) {
+    console.error('Error loading closing form:', error);
+    alert('Error loading closing form. Please try again.');
+  }
+}
+
+function disableClosingForm(){
+  document.getElementById("closingUser").disabled = true;
+  document.getElementById("generalNote").disabled = true;
+  document.querySelectorAll("#closingForm input").forEach(el => el.disabled = true);
+  document.getElementById("submitClosingBtn").disabled = true;
+}
+
+function enableClosingForm(){
+  document.getElementById("closingUser").disabled = false;
+  document.getElementById("generalNote").disabled = false;
+  document.querySelectorAll("#closingForm input").forEach(el => el.disabled = false);
+  document.getElementById("submitClosingBtn").disabled = false;
+}
+
+async function submitClosing(){
+  const user = document.getElementById("closingUser").value.trim();
+  const generalNote = document.getElementById("generalNote").value.trim();
+  
+  if(!user){ 
+    alert("Please enter your name"); 
+    return; 
+  }
+
+  const closingData = [];
+  let valid = true;
+  
+  document.querySelectorAll(".closing-item").forEach(item => {
+    const pizzaNameElement = item.querySelector('.pizza-name');
+    if(!pizzaNameElement) return;
+    
+    const originalName = pizzaNameElement.textContent;
+    const pizzaName = originalName.replace(/[^a-zA-Z0-9]/g, '_');
+    
+    const isWaste = document.getElementById(`waste_${pizzaName}`).checked;
+    
+    if(isWaste) {
+      const wasteWhole = document.getElementById(`wasteWhole_${pizzaName}`);
+      const wasteSlice = document.getElementById(`wasteSlice_${pizzaName}`);
+      
+      if(wasteWhole.value === "" || wasteSlice.value === "") {
+        alert(`Please fill waste amounts for ${originalName}`);
+        valid = false;
+        return;
+      }
+      
+      const whole = parseInt(wasteWhole.value) || 0;
+      const slice = parseInt(wasteSlice.value) || 0;
+      
+      if(slice > 7) {
+        alert(`Slices must be between 0 and 7 for ${originalName}`);
+        valid = false;
+        return;
+      }
+      
+      const wasteTotal = whole + (slice/8);
+      closingData.push({
+        name: originalName,
+        waste: wasteTotal,
+        selloutTime: null
+      });
+    } else {
+      const selloutTime = document.getElementById(`sellout_${pizzaName}`);
+      
+      if(!selloutTime.value) {
+        alert(`Please enter sellout time for ${originalName}`);
+        valid = false;
+        return;
+      }
+      
+      closingData.push({
+        name: originalName,
+        waste: 0,
+        selloutTime: selloutTime.value
+      });
+    }
+  });
+
+  if(!valid) return;
+  
+  if(!confirm(`Confirm end of day report?\n\n👤 Staff: ${user}`)) return;
+
+  try {
+    disableClosingForm();
+    const submitBtn = document.getElementById("submitClosingBtn");
+    submitBtn.classList.add('loading');
+
+    const res = await fetch(`${URL}?action=submitClosing&data=${encodeURIComponent(JSON.stringify({
+      user, 
+      pizzas: closingData,
+      note: generalNote
+    }))}`);
+    
+    if (!res.ok) throw new Error('Submission failed');
+    const data = await res.json();
+
     submitBtn.classList.remove('loading');
-    showStatus('portions', 'Connection error. Please check your internet.', 'error');
-    unlockPortionsForm();
+    alert("✅ End of day report submitted successfully!");
+
+    localStorage.setItem("lastClosingSubmit", JSON.stringify({
+      user, 
+      pizzas: closingData,
+      note: generalNote,
+      timestamp: data.timestamp
+    }));
+
+    showLastClosingUpdate(data.timestamp);
+    document.getElementById("newClosingBtn").classList.remove("hidden");
+  } catch (error) {
+    console.error('Error submitting closing data:', error);
+    document.getElementById("submitClosingBtn").classList.remove('loading');
+    alert('Error submitting data. Please try again.');
+    enableClosingForm();
   }
 }
 
-function lockPortionsForm() {
-  document.getElementById("portionsStaffName").disabled = true;
-  document.querySelectorAll("#portionsForm input").forEach(input => input.disabled = true);
-  document.querySelectorAll("#portionsForm .btn-qty").forEach(btn => btn.disabled = true);
-  document.getElementById("portionsSubmitBtn").disabled = true;
-}
-
-function unlockPortionsForm() {
-  document.getElementById("portionsStaffName").disabled = false;
-  document.querySelectorAll("#portionsForm input").forEach(input => input.disabled = false);
-  document.querySelectorAll("#portionsForm .btn-qty").forEach(btn => btn.disabled = false);
-  document.getElementById("portionsSubmitBtn").disabled = false;
-}
-
-function resetPortionsForm() {
-  localStorage.removeItem('kitchen_last_portions_submission');
-  window.lastPortionsSubmission = null;
-  
-  unlockPortionsForm();
-  
-  document.getElementById("portionsStaffName").value = '';
-  document.querySelectorAll("#portionsForm input").forEach(input => input.value = '');
-  
-  document.getElementById("portionsStatusMessage").style.display = 'none';
-  document.getElementById("portionsLastSubmission").style.display = 'none';
-  
-  document.getElementById("portionsSubmitBtn").style.display = 'block';
-  document.getElementById("portionsSubmitBtn").disabled = false;
-  document.getElementById("portionsSubmitBtn").classList.remove('loading');
-  document.getElementById("portionsNewSubmitBtn").style.display = 'none';
-  
-  document.getElementById("portionsStaffName").focus();
-}
-
-function displayLastPortionsSubmission() {
-  if(!window.lastPortionsSubmission) return;
-  
-  const sub = window.lastPortionsSubmission;
-  const date = new Date(sub.timestamp);
-  const dateStr = date.toLocaleDateString('en-GB');
-  const timeStr = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-  
-  const el = document.getElementById("portionsLastSubmission");
-  el.innerHTML = `📋 Last submission: ${sub.staffName} on ${dateStr} at ${timeStr}`;
-  el.style.display = 'block';
-}
-
-// ==================== UTILITY FUNCTIONS ====================
-function validateInput(input) {
-  let value = parseInt(input.value);
-  if(isNaN(value) || value < 0) {
-    input.value = '';
+function resetClosingForm(){
+  if(confirm("Are you sure you want to start a new report? This will clear all current data.")){
+    document.getElementById("closingUser").value = "";
+    document.getElementById("generalNote").value = "";
+    
+    document.querySelectorAll(".closing-item").forEach(item => {
+      const pizzaNameElement = item.querySelector('.pizza-name');
+      if(!pizzaNameElement) return;
+      
+      const pizzaName = pizzaNameElement.textContent.replace(/[^a-zA-Z0-9]/g, '_');
+      
+      document.getElementById(`waste_${pizzaName}`).checked = true;
+      document.getElementById(`wasteSection_${pizzaName}`).classList.remove('hidden');
+      document.getElementById(`selloutSection_${pizzaName}`).classList.add('hidden');
+      
+      document.getElementById(`wasteWhole_${pizzaName}`).value = '0';
+      document.getElementById(`wasteSlice_${pizzaName}`).value = '0';
+      document.getElementById(`sellout_${pizzaName}`).value = '';
+    });
+    
+    enableClosingForm();
+    
+    document.getElementById("newClosingBtn").classList.add("hidden");
+    document.getElementById("lastClosingUpdate").classList.add("hidden");
+    localStorage.removeItem("lastClosingSubmit");
   }
 }
 
-function handleEnterKey(event, section) {
-  if(event.key === "Enter") {
-    event.preventDefault();
-    const inputs = Array.from(document.querySelectorAll(`#${section}Form input[type='number']:not(:disabled)`));
-    const index = inputs.indexOf(event.target);
-    if(index > -1 && index < inputs.length - 1) {
-      inputs[index + 1].focus();
-    }
-  }
-}
-
-function showStatus(section, message, type = 'success') {
-  const statusEl = document.getElementById(section + 'StatusMessage');
-  statusEl.innerText = message;
-  statusEl.className = `status-message ${type === 'error' ? 'error' : ''}`;
-  statusEl.style.display = 'block';
+function showLastClosingUpdate(timestamp){
+  if(!timestamp) return;
   
-  setTimeout(() => {
-    if(statusEl.style.display === 'block') {
-      statusEl.style.display = 'none';
-    }
-  }, 10000);
+  const d = new Date(timestamp);
+  const text = d.toLocaleDateString('en-GB') + " at " + d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+  const el = document.getElementById("lastClosingUpdate");
+  el.innerHTML = `📋 Last submitted: ${text}`;
+  el.classList.remove("hidden");
 }
 
-// ==================== START APP ====================
-initializeApp();
+// Initialize
+setDate();
+
+// Handle image loading error
+document.querySelector('.logo').addEventListener('error', function() {
+  this.style.display = 'none';
+});
 </script>
 
 </body>
