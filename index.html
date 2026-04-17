@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Merrion Shop</title>
+
+<style>
+body{
+  font-family:Arial;
+  text-align:center;
+  padding:20px;
+}
+
+.logo{
+  width:200px;
+  margin:auto;
+  display:block;
+  margin-bottom:10px;
+}
+
+.title{
+  font-size:28px; 
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.date{
+  font-size:14px;
+  color:#777;
+  margin-bottom:15px;
+}
+
+.tabBtn{
+  padding:15px 25px;
+  margin:5px;
+  font-size:22px; 
+}
+
+.section{
+  display:none;
+}
+
+.active{
+  display:block;
+}
+
+.left{
+  max-width:500px;
+  margin:0 auto;
+}
+
+/* MÁS ESPACIO ENTRE ROWS SUPERIORES */
+.row{
+  margin:16px 0;
+}
+
+/* DROPDOWNS AJUSTADOS */
+.row select{
+  width:300px; /* mitad de 600 */
+  font-size:20px;
+  display:block;
+  margin:0 auto;
+  text-align:center;
+  text-align-last:center;
+}
+
+/* STOCK GRID */
+#stockForm{
+  display:grid;
+  grid-template-columns: 1fr 100px 100px;
+  gap:12px 20px;
+  align-items:center;
+}
+
+#stockForm span.bold{
+  text-align:left;
+  font-size:20px;
+}
+
+#stockForm input.whole, 
+#stockForm input.slice{
+  font-size:20px;
+  padding:6px;
+  width:80px; /* más cortos */
+  text-align:center; /* centrado */
+  box-sizing:border-box;
+  margin:auto;
+}
+
+#stockForm .header{
+  font-weight:bold;
+  font-size:22px;
+  text-align:left;
+  padding-bottom:6px;
+}
+
+.bigInput{
+  font-size:22px;
+  width:220px;
+  text-align:center;
+  margin:20px auto 15px;
+}
+
+button{
+  margin-top:20px;
+  font-size:22px;
+}
+
+.hidden{
+  display:none;
+}
+
+.bold{
+  font-weight:bold;
+}
+
+#lastUpdate{
+  margin-top:10px;
+}
+
+/* Last Drop */
+#dropData{
+  display:grid;
+  grid-template-columns: auto 60px;
+  justify-content:center;
+  gap:20px;
+  row-gap:6px;
+  margin-top:10px;
+}
+
+#dropData .header{
+  font-weight:bold;
+  font-size:22px;
+}
+
+#dropData .cell{
+  text-align:left;
+  font-size:20px;
+}
+#dropData .cell.qty{
+  text-align:right;
+  font-size:20px;
+}
+</style>
+</head>
+
+<body>
+
+<img src="icon.png" class="logo">
+
+<div class="title">MERRION SHOP</div>
+<div id="todayDate" class="date"></div>
+
+<button class="tabBtn" onclick="showTab('stock')">Stock Form</button>
+<button class="tabBtn" onclick="showTab('drop')">Last Drop</button>
+
+<!-- STOCK -->
+<div id="stock" class="section">
+
+<input id="stockUser" class="bigInput" placeholder="Your name">
+
+<div class="left">
+
+<div class="row">
+  <span>Weather Forecast</span>
+  <select id="weather">
+    <option value=""></option>
+    <option>Sunny</option>
+    <option>Cloudy</option>
+    <option>Rainy</option>
+    <option>Storm</option>
+  </select>
+</div>
+
+<div class="row">
+  <span>How's today going?</span>
+  <select id="traffic">
+    <option value=""></option>
+    <option>Quiet</option>
+    <option>Normal</option>
+    <option>Busy</option>
+  </select>
+</div>
+
+<h3 style="text-align:center;">Stock Info</h3>
+
+<div id="stockForm"></div>
+
+<button id="submitStockBtn" onclick="submitStock()">Submit Stock</button>
+<button id="newBtn" class="hidden" onclick="resetForm()">New Submit</button>
+<div id="lastUpdate" class="hidden"></div>
+
+</div>
+</div>
+
+<!-- DROP -->
+<div id="drop" class="section">
+  <h3>Last Drop Info</h3>
+  <div id="dropData">
+    <div class="header cell">Pizza</div>
+    <div class="header cell qty">QTY</div>
+  </div>
+</div>
+
+<script>
+const URL = "https://script.google.com/macros/s/AKfycbzCkV1ETniuZLTvxvV4IJNJ2hoRBs_0qyTOCtyhxMS4QHAxDDGVdl8O3JCSnGOj0G8a/exec";
+
+/* DATE */
+function setDate(){
+  const today = new Date();
+  document.getElementById("todayDate").innerText =
+    today.toLocaleDateString('en-GB',{
+      weekday:'long',
+      day:'numeric',
+      month:'long'
+    });
+}
+
+/* TAB CONTROL */
+function showTab(tab){
+  document.querySelectorAll(".section")
+    .forEach(s => s.classList.remove("active"));
+
+  document.getElementById(tab).classList.add("active");
+
+  if(tab === "stock"){
+    if(!window.loaded){
+      loadPizzas();
+      window.loaded = true;
+    }
+  }
+
+  if(tab === "drop"){
+    loadDrop();
+  }
+}
+
+/* LOAD PIZZAS */
+async function loadPizzas(){
+  const res = await fetch(`${URL}?action=getPizzas`);
+  const pizzas = await res.json();
+
+  const formDiv = document.getElementById("stockForm");
+  formDiv.innerHTML = "";
+
+  formDiv.innerHTML += `
+    <span class="header">Pizza</span>
+    <span class="header">Whole pies</span>
+    <span class="header">Slices</span>
+  `;
+
+  pizzas.forEach(p=>{
+    formDiv.innerHTML += `
+      <span class="bold">${p}</span>
+      <input id="whole_${p}" class="whole" type="number" min="0">
+      <input id="slice_${p}" class="slice" type="number" min="0" step="1">
+    `;
+  });
+
+  const saved = JSON.parse(localStorage.getItem("lastStockSubmit") || "{}");
+  if(saved.pizzas){
+    saved.pizzas.forEach(p=>{
+      const whole = Math.floor(p.qty);
+      const slice = Math.round((p.qty - whole) * 8);
+      const elWhole = document.getElementById("whole_" + p.name);
+      const elSlice = document.getElementById("slice_" + p.name);
+      if(elWhole) elWhole.value = whole;
+      if(elSlice) elSlice.value = slice;
+    });
+    if(saved.user) document.getElementById("stockUser").value = saved.user;
+    if(saved.weather) document.getElementById("weather").value = saved.weather;
+    if(saved.traffic) document.getElementById("traffic").value = saved.traffic;
+    if(saved.timestamp) showLastUpdate(saved.timestamp);
+    document.getElementById("newBtn").classList.remove("hidden");
+
+    document.getElementById("stockUser").disabled = true;
+    document.getElementById("weather").disabled = true;
+    document.getElementById("traffic").disabled = true;
+    pizzas.forEach(p=>{
+      document.getElementById("whole_" + p).disabled = true;
+      document.getElementById("slice_" + p).disabled = true;
+    });
+    document.getElementById("submitStockBtn").disabled = true;
+  }
+}
+
+/* VALIDACIÓN + SUBMIT */
+async function submitStock(){
+
+  const user = document.getElementById("stockUser").value.trim();
+  const weather = document.getElementById("weather").value;
+  const traffic = document.getElementById("traffic").value;
+
+  if(!user || !weather || !traffic){
+    alert("Please complete all fields");
+    return;
+  }
+
+  let valid = true;
+
+  document.querySelectorAll("[id^=whole_]").forEach(i=>{
+    const slice = document.getElementById("slice_" + i.id.replace("whole_",""));
+    if(i.value === "" || slice.value === ""){
+      valid = false;
+    }
+  });
+
+  if(!valid){
+    alert("Fill all pizza fields");
+    return;
+  }
+
+  if(!confirm("Are you sure?")) return;
+
+  blockForm();
+
+  const pizzas=[];
+  document.querySelectorAll("[id^=whole_]").forEach(i=>{
+    const name = i.id.replace("whole_","");
+    const whole = Number(i.value)||0;
+    const slice = Number(document.getElementById("slice_" + name).value)||0;
+    const total = whole + (slice/8); // ✅ CORREGIDO
+    pizzas.push({ name, qty: total });
+  });
+
+  const res = await fetch(`${URL}?action=submitStock&data=${encodeURIComponent(JSON.stringify({
+    user, weather, traffic, pizzas
+  }))}`);
+
+  const data = await res.json();
+
+  alert("Submitted");
+
+  localStorage.setItem("lastStockSubmit", JSON.stringify({
+    user, weather, traffic, pizzas, timestamp: data.timestamp
+  }));
+
+  showLastUpdate(data.timestamp);
+  document.getElementById("newBtn").classList.remove("hidden");
+
+  document.getElementById("stockUser").disabled = true;
+  document.getElementById("weather").disabled = true;
+  document.getElementById("traffic").disabled = true;
+  pizzas.forEach(p=>{
+    document.getElementById("whole_" + p.name).disabled = true;
+    document.getElementById("slice_" + p.name).disabled = true;
+  });
+  document.getElementById("submitStockBtn").disabled = true;
+}
+
+/* RESET, DROP, ETC (SIN CAMBIOS) */
+function resetForm(){
+  document.getElementById("stockUser").value = "";
+  document.getElementById("weather").value = "";
+  document.getElementById("traffic").value = "";
+  document.querySelectorAll("[id^=whole_]").forEach(i=>{
+    i.value = "";
+    i.disabled = false;
+  });
+  document.querySelectorAll("[id^=slice_]").forEach(i=>{
+    i.value = "";
+    i.disabled = false;
+  });
+  document.getElementById("stockUser").disabled = false;
+  document.getElementById("weather").disabled = false;
+  document.getElementById("traffic").disabled = false;
+  document.getElementById("submitStockBtn").disabled = false;
+  document.getElementById("newBtn").classList.add("hidden");
+  document.getElementById("lastUpdate").classList.add("hidden");
+  localStorage.removeItem("lastStockSubmit");
+}
+
+function blockForm(){
+  document.querySelectorAll("input, select, button")
+    .forEach(el=>{
+      if(el.classList.contains("tabBtn") || el.id === "newBtn") return;
+      el.disabled = true;
+    });
+}
+
+function showLastUpdate(date){
+  const d = new Date(date);
+  const text = d.toLocaleDateString('en-GB') +
+    " at " + d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+
+  const el = document.getElementById("lastUpdate");
+  el.innerText = "Last update at " + text;
+  el.classList.remove("hidden");
+}
+
+async function loadDrop(){
+  const res = await fetch(`${URL}?action=getLastDrop`);
+  const data = await res.json();
+
+  const div = document.getElementById("dropData");
+  div.innerHTML = `
+    <div class="header cell">Pizza</div>
+    <div class="header cell qty">QTY</div>
+  `;
+
+  data.forEach(d=>{
+    div.innerHTML += `
+      <div class="cell">${d.pizza}</div>
+      <div class="cell qty">${d.lastDrop}</div>
+    `;
+  });
+}
+
+setDate();
+</script>
+
+</body>
+</html>
