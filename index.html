@@ -1,413 +1,929 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Merrion Shop</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>BAMBINO CPU - Kitchen Management</title>
 
 <style>
-body{
-  font-family:Arial;
-  text-align:center;
-  padding:20px;
+* {
+  box-sizing: border-box;
 }
 
-.logo{
-  width:200px;
-  margin:auto;
-  display:block;
-  margin-bottom:10px;
+html, body {
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: 0;
 }
 
-.title{
-  font-size:28px; 
-  font-weight:bold;
-  margin-top:10px;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-size: 18px;
+  padding: 20px;
+  text-align: center;
+  background: #f5f5f5;
+  min-height: 100vh;
 }
 
-.date{
-  font-size:14px;
-  color:#777;
-  margin-bottom:15px;
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  padding: 25px 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.tabBtn{
-  padding:15px 25px;
-  margin:5px;
-  font-size:22px; 
+.logo {
+  width: 180px;
+  display: block;
+  margin: 0 auto 15px;
 }
 
-.section{
-  display:none;
+h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
+  color: #333;
 }
 
-.active{
-  display:block;
+.date {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 25px;
 }
 
-.left{
-  max-width:500px;
-  margin:0 auto;
+/* Tabs Styles */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e0e0e0;
 }
 
-/* MÁS ESPACIO ENTRE ROWS SUPERIORES */
-.row{
-  margin:16px 0;
+.tab {
+  flex: 1;
+  padding: 15px 20px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 8px 8px 0 0;
+  position: relative;
+  bottom: -2px;
 }
 
-/* DROPDOWNS AJUSTADOS */
-.row select{
-  width:300px; /* mitad de 600 */
-  font-size:20px;
-  display:block;
-  margin:0 auto;
-  text-align:center;
-  text-align-last:center;
+.tab:hover {
+  background: #f0f0f0;
+  color: #333;
 }
 
-/* STOCK GRID */
-#stockForm{
-  display:grid;
-  grid-template-columns: 1fr 100px 100px;
-  gap:12px 20px;
-  align-items:center;
+.tab.active {
+  color: #e63946;
+  border-bottom: 3px solid #e63946;
 }
 
-#stockForm span.bold{
-  text-align:left;
-  font-size:20px;
+/* Tab Content */
+.tab-content {
+  display: none;
 }
 
-#stockForm input.whole, 
-#stockForm input.slice{
-  font-size:20px;
-  padding:6px;
-  width:80px; /* más cortos */
-  text-align:center; /* centrado */
-  box-sizing:border-box;
-  margin:auto;
+.tab-content.active {
+  display: block;
 }
 
-#stockForm .header{
-  font-weight:bold;
-  font-size:22px;
-  text-align:left;
-  padding-bottom:6px;
+/* Form Styles */
+.user-section {
+  margin-bottom: 20px;
+  text-align: left;
 }
 
-.bigInput{
-  font-size:22px;
-  width:220px;
-  text-align:center;
-  margin:20px auto 15px;
+.user-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
 }
 
-button{
-  margin-top:20px;
-  font-size:22px;
+.user-input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 18px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  transition: border-color 0.3s;
 }
 
-.hidden{
-  display:none;
+.user-input:focus {
+  outline: none;
+  border-color: #e63946;
 }
 
-.bold{
-  font-weight:bold;
+.user-input:disabled {
+  background: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
-#lastUpdate{
-  margin-top:10px;
+.categoryTitle {
+  font-size: 20px;
+  margin: 25px 0 15px 0;
+  font-weight: 700;
+  color: #333;
+  text-align: left;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e63946;
+  display: inline-block;
 }
 
-/* Last Drop */
-#dropData{
-  display:grid;
-  grid-template-columns: auto 60px;
-  justify-content:center;
-  gap:20px;
-  row-gap:6px;
-  margin-top:10px;
+/* Items Grid */
+.items-grid {
+  margin: 20px 0;
+  opacity: 1;
+  transition: opacity 0.3s;
 }
 
-#dropData .header{
-  font-weight:bold;
-  font-size:22px;
+.items-grid.loading {
+  opacity: 0.6;
+  pointer-events: none;
 }
 
-#dropData .cell{
-  text-align:left;
-  font-size:20px;
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 10px;
+  background: #fafafa;
+  border-radius: 8px;
+  transition: all 0.3s;
 }
-#dropData .cell.qty{
-  text-align:right;
-  font-size:20px;
+
+.row:hover {
+  background: #f5f5f5;
+  transform: translateX(5px);
+}
+
+.ingredientContainer {
+  text-align: left;
+}
+
+.ingredient {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+.unit {
+  font-size: 13px;
+  color: #888;
+  margin-top: 2px;
+}
+
+input[type="number"] {
+  width: 70px;
+  padding: 10px;
+  font-size: 18px;
+  text-align: center;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.3s;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  border-color: #e63946;
+}
+
+input[type="number"]:disabled {
+  background: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.btn-qty {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  background: #e63946;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-qty:hover:not(:disabled) {
+  background: #c1121f;
+  transform: scale(1.05);
+}
+
+.btn-qty:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Action Buttons */
+.btn-primary {
+  width: 100%;
+  padding: 15px;
+  font-size: 20px;
+  font-weight: 600;
+  background: #e63946;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 20px;
+  position: relative;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #c1121f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(230, 57, 70, 0.3);
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-primary.loading {
+  color: transparent;
+}
+
+.btn-primary.loading::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  margin-top: -12px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+
+.btn-secondary:hover {
+  background: #357abd;
+  transform: translateY(-2px);
+}
+
+.btn-back {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  background: #f0f0f0;
+  color: #666;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 15px;
+}
+
+.btn-back:hover {
+  background: #e0e0e0;
+}
+
+/* Status Messages */
+.status-message {
+  margin-top: 20px;
+  padding: 15px;
+  background: #e8f5e9;
+  border-left: 4px solid #4caf50;
+  border-radius: 4px;
+  text-align: left;
+  font-size: 14px;
+  color: #2e7d32;
+}
+
+.status-message.error {
+  background: #ffebee;
+  border-left-color: #f44336;
+  color: #c62828;
+}
+
+.last-submission-info {
+  margin: 15px 0;
+  padding: 12px;
+  background: #fff3e0;
+  border-left: 4px solid #ff9800;
+  border-radius: 4px;
+  text-align: left;
+  font-size: 14px;
+  color: #e65100;
+}
+
+/* Info Box */
+.infoBox {
+  background: #f8f9fa;
+  border-left: 4px solid #e63946;
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  text-align: left;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Counters */
+.counterRow {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.counter {
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.counter.red { background: #f44336; }
+.counter.yellow { background: #ff9800; }
+.counter.green { background: #4caf50; }
+
+/* Data Table */
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.dataTable th {
+  text-align: center;
+  padding: 12px;
+  border-bottom: 2px solid #e0e0e0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  background: #fafafa;
+}
+
+.dataTable td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 15px;
+  text-align: center;
+}
+
+.prep {
+  font-weight: 600;
+  text-align: left;
+  color: #333;
+}
+
+.status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status.good { background: #c8e6c9; color: #2e7d32; }
+.status.low { background: #ffe0b2; color: #e65100; }
+.status.out { background: #ffcdd2; color: #c62828; }
+
+.note {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  
+  .container {
+    padding: 15px;
+  }
+  
+  .row {
+    gap: 8px;
+  }
+  
+  .row:hover {
+    transform: translateX(0);
+  }
+  
+  input[type="number"] {
+    width: 60px;
+    font-size: 16px;
+    padding: 8px;
+  }
+  
+  .btn-qty {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+  
+  .counter {
+    padding: 8px 15px;
+    font-size: 12px;
+  }
+  
+  .tab {
+    padding: 12px 10px;
+    font-size: 14px;
+  }
+  
+  .dataTable th,
+  .dataTable td {
+    padding: 8px;
+    font-size: 13px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<img src="icon.png" class="logo">
-
-<div class="title">MERRION SHOP</div>
-<div id="todayDate" class="date"></div>
-
-<button class="tabBtn" onclick="showTab('stock')">Stock Form</button>
-<button class="tabBtn" onclick="showTab('drop')">Last Drop</button>
-
-<!-- STOCK -->
-<div id="stock" class="section">
-
-<input id="stockUser" class="bigInput" placeholder="Your name">
-
-<div class="left">
-
-<div class="row">
-  <span>Weather Forecast</span>
-  <select id="weather">
-    <option value=""></option>
-    <option>Sunny</option>
-    <option>Cloudy</option>
-    <option>Rainy</option>
-    <option>Storm</option>
-  </select>
-</div>
-
-<div class="row">
-  <span>How's today going?</span>
-  <select id="traffic">
-    <option value=""></option>
-    <option>Quiet</option>
-    <option>Normal</option>
-    <option>Busy</option>
-  </select>
-</div>
-
-<h3 style="text-align:center;">Stock Info</h3>
-
-<div id="stockForm"></div>
-
-<button id="submitStockBtn" onclick="submitStock()">Submit Stock</button>
-<button id="newBtn" class="hidden" onclick="resetForm()">New Submit</button>
-<div id="lastUpdate" class="hidden"></div>
-
-</div>
-</div>
-
-<!-- DROP -->
-<div id="drop" class="section">
-  <h3>Last Drop Info</h3>
-  <div id="dropData">
-    <div class="header cell">Pizza</div>
-    <div class="header cell qty">QTY</div>
+<div class="container">
+  <img src="icon.png" class="logo" alt="Bambino Pizza">
+  
+  <h1>🍕 BAMBINO CPU</h1>
+  
+  <div id="todayDate" class="date"></div>
+  
+  <!-- Tabs Navigation -->
+  <div class="tabs">
+    <button class="tab" onclick="showTab('form')">📝 Stock Form</button>
+    <button class="tab" onclick="showTab('stock')">📊 Stock Level</button>
+    <button class="tab" onclick="showTab('prod')">📈 Production</button>
+    <button class="tab" onclick="showTab('purchase')">🛒 Purchase</button>
+  </div>
+  
+  <!-- Tab Content Container -->
+  <div id="tabContent" class="tab-content active"></div>
+  
+  <div class="note">
+    ⚠️ Verify all quantities before submitting
   </div>
 </div>
 
 <script>
-const URL = "https://script.google.com/macros/s/AKfycbzCkV1ETniuZLTvxvV4IJNJ2hoRBs_0qyTOCtyhxMS4QHAxDDGVdl8O3JCSnGOj0G8a/exec";
+const URL = "https://script.google.com/macros/s/AKfycbyhEMh2GCCSz-bDB6SF51B7yxKbt4RuvT5Kz769JmTlvWMed2MdqKV6phw13Ym8GSB_ow/exec";
 
-/* DATE */
-function setDate(){
-  const today = new Date();
-  document.getElementById("todayDate").innerText =
-    today.toLocaleDateString('en-GB',{
-      weekday:'long',
-      day:'numeric',
-      month:'long'
-    });
-}
+document.getElementById("todayDate").innerText = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
 
-/* TAB CONTROL */
-function showTab(tab){
-  document.querySelectorAll(".section")
-    .forEach(s => s.classList.remove("active"));
-
-  document.getElementById(tab).classList.add("active");
-
-  if(tab === "stock"){
-    if(!window.loaded){
-      loadPizzas();
-      window.loaded = true;
-    }
-  }
-
-  if(tab === "drop"){
-    loadDrop();
-  }
-}
-
-/* LOAD PIZZAS */
-async function loadPizzas(){
-  const res = await fetch(`${URL}?action=getPizzas`);
-  const pizzas = await res.json();
-
-  const formDiv = document.getElementById("stockForm");
-  formDiv.innerHTML = "";
-
-  formDiv.innerHTML += `
-    <span class="header">Pizza</span>
-    <span class="header">Whole pies</span>
-    <span class="header">Slices</span>
-  `;
-
-  pizzas.forEach(p=>{
-    formDiv.innerHTML += `
-      <span class="bold">${p}</span>
-      <input id="whole_${p}" class="whole" type="number" min="0">
-      <input id="slice_${p}" class="slice" type="number" min="0" step="1">
-    `;
+// Tab management
+function setActiveTab(tabName) {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.remove('active');
   });
-
-  const saved = JSON.parse(localStorage.getItem("lastStockSubmit") || "{}");
-  if(saved.pizzas){
-    saved.pizzas.forEach(p=>{
-      const whole = Math.floor(p.qty);
-      const slice = Math.round((p.qty - whole) * 8);
-      const elWhole = document.getElementById("whole_" + p.name);
-      const elSlice = document.getElementById("slice_" + p.name);
-      if(elWhole) elWhole.value = whole;
-      if(elSlice) elSlice.value = slice;
-    });
-    if(saved.user) document.getElementById("stockUser").value = saved.user;
-    if(saved.weather) document.getElementById("weather").value = saved.weather;
-    if(saved.traffic) document.getElementById("traffic").value = saved.traffic;
-    if(saved.timestamp) showLastUpdate(saved.timestamp);
-    document.getElementById("newBtn").classList.remove("hidden");
-
-    document.getElementById("stockUser").disabled = true;
-    document.getElementById("weather").disabled = true;
-    document.getElementById("traffic").disabled = true;
-    pizzas.forEach(p=>{
-      document.getElementById("whole_" + p).disabled = true;
-      document.getElementById("slice_" + p).disabled = true;
-    });
-    document.getElementById("submitStockBtn").disabled = true;
+  
+  const tabs = document.querySelectorAll('.tab');
+  const tabMap = { 'form': 0, 'stock': 1, 'prod': 2, 'purchase': 3 };
+  if (tabs[tabMap[tabName]]) {
+    tabs[tabMap[tabName]].classList.add('active');
   }
 }
 
-/* VALIDACIÓN + SUBMIT */
-async function submitStock(){
+function showTab(tabName) {
+  setActiveTab(tabName);
+  
+  if (tabName === "form") loadForm();
+  if (tabName === "stock") loadStock();
+  if (tabName === "prod") loadProduction();
+  if (tabName === "purchase") loadPurchase();
+}
 
-  const user = document.getElementById("stockUser").value.trim();
-  const weather = document.getElementById("weather").value;
-  const traffic = document.getElementById("traffic").value;
+// FORM
+async function loadForm() {
+  const r = await fetch(URL + "?action=getIngredients");
+  const data = await r.json();
 
-  if(!user || !weather || !traffic){
-    alert("Please complete all fields");
+  const tab = document.getElementById("tabContent");
+  tab.innerHTML = "";
+
+  const container = document.createElement("div");
+  container.className = "items-grid";
+  container.id = "formRows";
+
+  // Check for saved submission
+  const last = localStorage.getItem("lastStockSubmit");
+  const isLocked = last && !JSON.parse(last).completed;
+
+  if (last) {
+    const lastData = JSON.parse(last);
+    
+    // New Stock button
+    const newBtn = document.createElement("button");
+    newBtn.className = "btn-secondary";
+    newBtn.innerText = "🔄 NEW STOCK";
+    newBtn.onclick = () => {
+      if (confirm("Start a new stock submission? Current data will be cleared.")) {
+        localStorage.removeItem("lastStockSubmit");
+        loadForm();
+      }
+    };
+    tab.appendChild(newBtn);
+
+    // Last submission info
+    const lastUpdateDiv = document.createElement("div");
+    lastUpdateDiv.className = "last-submission-info";
+    const lastTime = new Date(lastData.time || Date.now());
+    lastUpdateDiv.innerHTML = `📋 Last update: ${lastTime.toLocaleDateString('en-GB')} at ${lastTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} by ${lastData.chef || 'Unknown'}`;
+    tab.appendChild(lastUpdateDiv);
+  }
+
+  // Chef name input
+  const userSection = document.createElement("div");
+  userSection.className = "user-section";
+  userSection.innerHTML = `
+    <label class="user-label">👨‍🍳 Chef Name:</label>
+    <input type="text" id="chefName" class="user-input" placeholder="Enter your name" autocomplete="off">
+  `;
+  tab.appendChild(userSection);
+
+  tab.appendChild(container);
+
+  // Separate categories
+  const dry = data.filter(i => i.category === "Dry Store");
+  const cold = data.filter(i => i.category === "Cold Room");
+
+  function renderGroup(title, items) {
+    if (items.length === 0) return;
+
+    const titleDiv = document.createElement("div");
+    titleDiv.className = "categoryTitle";
+    titleDiv.innerText = title;
+    container.appendChild(titleDiv);
+
+    items.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "row";
+      const itemId = item.name.replace(/[^a-zA-Z0-9]/g, '_');
+      
+      let savedValue = '';
+      if (isLocked && last) {
+        const lastData = JSON.parse(last);
+        const savedItem = lastData.data.find(d => d.name === item.name);
+        if (savedItem) savedValue = savedItem.qty;
+      }
+      
+      row.innerHTML = `
+        <div class="ingredientContainer">
+          <div class="ingredient">${item.name}</div>
+          <div class="unit">${item.unit || ""}</div>
+        </div>
+        <button class="btn-qty" onclick="changeQuantity('${itemId}', -1)">−</button>
+        <input type="number" id="${itemId}" data-item-name="${item.name}" min="0" placeholder="0" value="${savedValue}" ${isLocked ? 'disabled' : ''}>
+        <button class="btn-qty" onclick="changeQuantity('${itemId}', 1)" ${isLocked ? 'disabled' : ''}>+</button>
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  renderGroup("📦 Dry Store", dry);
+  renderGroup("❄️ Cold Room", cold);
+
+  // Submit button
+  const submitBtn = document.createElement("button");
+  submitBtn.id = "submitStockBtn";
+  submitBtn.className = "btn-primary";
+  submitBtn.innerText = "📤 SUBMIT STOCK";
+  submitBtn.onclick = submitStock;
+  tab.appendChild(submitBtn);
+
+  if (isLocked) {
+    const lastData = JSON.parse(last);
+    document.getElementById("chefName").value = lastData.chef || '';
+    document.getElementById("chefName").disabled = true;
+    submitBtn.disabled = true;
+  } else {
+    document.getElementById("chefName").focus();
+  }
+}
+
+function changeQuantity(id, delta) {
+  const input = document.getElementById(id);
+  if (!input || input.disabled) return;
+  
+  let current = parseInt(input.value) || 0;
+  current = Math.max(0, current + delta);
+  input.value = current || '';
+}
+
+async function submitStock() {
+  const chef = document.getElementById("chefName").value.trim();
+  if (!chef) {
+    showStatus("Chef name is required");
+    document.getElementById("chefName").focus();
     return;
   }
 
-  let valid = true;
-
-  document.querySelectorAll("[id^=whole_]").forEach(i=>{
-    const slice = document.getElementById("slice_" + i.id.replace("whole_",""));
-    if(i.value === "" || slice.value === ""){
-      valid = false;
-    }
+  const inputs = document.querySelectorAll("#formRows input[type='number']");
+  let allFilled = true;
+  inputs.forEach(input => {
+    if (input.value === "" || parseInt(input.value) < 0) allFilled = false;
   });
 
-  if(!valid){
-    alert("Fill all pizza fields");
+  if (!allFilled) {
+    showStatus("Please fill in all quantities (use 0 if needed)", true);
     return;
   }
 
-  if(!confirm("Are you sure?")) return;
+  const totalItems = Array.from(inputs).reduce((sum, input) => sum + (parseInt(input.value) || 0), 0);
+  
+  if (!confirm(`Confirm stock submission?\n\nChef: ${chef}\nTotal items: ${totalItems}`)) return;
 
-  blockForm();
-
-  const pizzas=[];
-  document.querySelectorAll("[id^=whole_]").forEach(i=>{
-    const name = i.id.replace("whole_","");
-    const whole = Number(i.value)||0;
-    const slice = Number(document.getElementById("slice_" + name).value)||0;
-    const total = whole + (slice/8); // ✅ CORREGIDO
-    pizzas.push({ name, qty: total });
+  // Lock form
+  document.querySelectorAll("#formRows input, #formRows .btn-qty, #chefName").forEach(el => {
+    el.disabled = true;
   });
 
-  const res = await fetch(`${URL}?action=submitStock&data=${encodeURIComponent(JSON.stringify({
-    user, weather, traffic, pizzas
-  }))}`);
+  const submitBtn = document.getElementById("submitStockBtn");
+  submitBtn.disabled = true;
+  submitBtn.classList.add("loading");
 
-  const data = await res.json();
-
-  alert("Submitted");
-
-  localStorage.setItem("lastStockSubmit", JSON.stringify({
-    user, weather, traffic, pizzas, timestamp: data.timestamp
-  }));
-
-  showLastUpdate(data.timestamp);
-  document.getElementById("newBtn").classList.remove("hidden");
-
-  document.getElementById("stockUser").disabled = true;
-  document.getElementById("weather").disabled = true;
-  document.getElementById("traffic").disabled = true;
-  pizzas.forEach(p=>{
-    document.getElementById("whole_" + p.name).disabled = true;
-    document.getElementById("slice_" + p.name).disabled = true;
+  let data = [];
+  inputs.forEach(input => {
+    data.push({ name: input.dataset.itemName, qty: parseInt(input.value) || 0 });
   });
-  document.getElementById("submitStockBtn").disabled = true;
-}
 
-/* RESET, DROP, ETC (SIN CAMBIOS) */
-function resetForm(){
-  document.getElementById("stockUser").value = "";
-  document.getElementById("weather").value = "";
-  document.getElementById("traffic").value = "";
-  document.querySelectorAll("[id^=whole_]").forEach(i=>{
-    i.value = "";
-    i.disabled = false;
-  });
-  document.querySelectorAll("[id^=slice_]").forEach(i=>{
-    i.value = "";
-    i.disabled = false;
-  });
-  document.getElementById("stockUser").disabled = false;
-  document.getElementById("weather").disabled = false;
-  document.getElementById("traffic").disabled = false;
-  document.getElementById("submitStockBtn").disabled = false;
-  document.getElementById("newBtn").classList.add("hidden");
-  document.getElementById("lastUpdate").classList.add("hidden");
-  localStorage.removeItem("lastStockSubmit");
-}
-
-function blockForm(){
-  document.querySelectorAll("input, select, button")
-    .forEach(el=>{
-      if(el.classList.contains("tabBtn") || el.id === "newBtn") return;
-      el.disabled = true;
+  try {
+    await fetch(URL + "?action=submitStock&chef=" + encodeURIComponent(chef) + "&data=" + encodeURIComponent(JSON.stringify(data)));
+    
+    const submission = {
+      chef: chef,
+      data: data,
+      time: Date.now(),
+      completed: true
+    };
+    localStorage.setItem("lastStockSubmit", JSON.stringify(submission));
+    
+    showStatus(`✅ Stock submitted successfully by ${chef}!`, false);
+    loadForm(); // Reload to show new stock button
+  } catch (error) {
+    console.error("Error submitting stock:", error);
+    showStatus("❌ Error submitting data. Please check your connection.", true);
+    // Unlock form on error
+    document.querySelectorAll("#formRows input, #formRows .btn-qty, #chefName").forEach(el => {
+      el.disabled = false;
     });
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("loading");
+  }
 }
 
-function showLastUpdate(date){
-  const d = new Date(date);
-  const text = d.toLocaleDateString('en-GB') +
-    " at " + d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-
-  const el = document.getElementById("lastUpdate");
-  el.innerText = "Last update at " + text;
-  el.classList.remove("hidden");
+function showStatus(message, isError = false) {
+  let statusDiv = document.getElementById("dynamicStatus");
+  if (!statusDiv) {
+    statusDiv = document.createElement("div");
+    statusDiv.id = "dynamicStatus";
+    statusDiv.className = "status-message";
+    const tab = document.getElementById("tabContent");
+    tab.appendChild(statusDiv);
+  }
+  
+  statusDiv.innerText = message;
+  statusDiv.className = `status-message ${isError ? 'error' : ''}`;
+  statusDiv.style.display = "block";
+  
+  setTimeout(() => {
+    if (statusDiv.style.display === "block") {
+      statusDiv.style.display = "none";
+    }
+  }, 5000);
 }
 
-async function loadDrop(){
-  const res = await fetch(`${URL}?action=getLastDrop`);
-  const data = await res.json();
+// STOCK LEVEL
+async function loadStock() {
+  const tab = document.getElementById("tabContent");
+  tab.innerHTML = '<div style="text-align: center; padding: 40px;">Loading...</div>';
+  
+  try {
+    const r = await fetch(URL + "?action=getCurrentStock");
+    const d = await r.json();
 
-  const div = document.getElementById("dropData");
-  div.innerHTML = `
-    <div class="header cell">Pizza</div>
-    <div class="header cell qty">QTY</div>
-  `;
+    const date = new Date(d.lastDate);
+    const formatted = date.toLocaleDateString('en-GB') + " " + date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
-  data.forEach(d=>{
-    div.innerHTML += `
-      <div class="cell">${d.pizza}</div>
-      <div class="cell qty">${d.lastDrop}</div>
+    let out = 0, low = 0, good = 0;
+
+    d.rows.forEach(r => {
+      const s = r.status.toLowerCase();
+      if (s.includes("out")) out++;
+      else if (s.includes("low")) low++;
+      else good++;
+    });
+
+    d.rows.sort((a, b) => {
+      function rank(s) {
+        s = s.status.toLowerCase();
+        if (s.includes("out")) return 1;
+        if (s.includes("low")) return 2;
+        return 3;
+      }
+      return rank(a) - rank(b);
+    });
+
+    let html = `
+      <div class="infoBox">
+        📊 Stock Level at <strong>${formatted}</strong>
+      </div>
+
+      <div class="counterRow">
+        <div class="counter red">🔴 ${out} Out of Stock</div>
+        <div class="counter yellow">🟡 ${low} Low Stock</div>
+        <div class="counter green">🟢 ${good} Good Stock</div>
+      </div>
+
+      <table class="dataTable">
+        <thead>
+          <tr>
+            <th>Prep Item</th>
+            <th>Stock</th>
+            <th>Par Level</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
     `;
-  });
+
+    d.rows.forEach(r => {
+      let cls = "good";
+      const s = r.status.toLowerCase();
+      if (s.includes("out")) cls = "out";
+      else if (s.includes("low")) cls = "low";
+
+      let icon = "🟢";
+      if (cls === "out") icon = "🔴";
+      if (cls === "low") icon = "🟡";
+
+      html += `
+        <tr>
+          <td class="prep">${r.prep}</td>
+          <td>${r.stock}</td>
+          <td>${r.par}</td>
+          <td><span class="status ${cls}">${icon} ${r.status}</span></td>
+        </tr>
+      `;
+    });
+
+    html += `
+        </tbody>
+      </table>
+    `;
+    
+    tab.innerHTML = html;
+  } catch (error) {
+    console.error("Error loading stock:", error);
+    tab.innerHTML = '<div class="status-message error">❌ Error loading stock data. Please refresh.</div>';
+  }
 }
 
-setDate();
+// PRODUCTION
+async function loadProduction() {
+  const tab = document.getElementById("tabContent");
+  tab.innerHTML = '<div style="text-align: center; padding: 40px;">Loading...</div>';
+  
+  try {
+    const r = await fetch(URL + "?action=getTomorrowProduction");
+    const data = await r.json();
+
+    let html = `
+      <div class="infoBox">
+        📈 Production needed for tomorrow
+      </div>
+      <table class="dataTable">
+        <thead>
+          <tr>
+            <th>Prep Item</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    data.forEach(r => {
+      let qty = parseFloat(String(r.qty).replace(",", "."));
+      if (qty > 0) {
+        html += `
+          <tr>
+            <td class="prep">${r.prep}</td>
+            <td><strong>${Math.round(qty)}</strong></td>
+            <td>${r.unit}</td>
+          </tr>
+        `;
+      }
+    });
+
+    html += `
+        </tbody>
+      </table>
+    `;
+    
+    tab.innerHTML = html;
+  } catch (error) {
+    console.error("Error loading production:", error);
+    tab.innerHTML = '<div class="status-message error">❌ Error loading production data. Please refresh.</div>';
+  }
+}
+
+// PURCHASE
+async function loadPurchase() {
+  const tab = document.getElementById("tabContent");
+  tab.innerHTML = '<div style="text-align: center; padding: 40px;">Loading...</div>';
+  
+  try {
+    const r = await fetch(URL + "?action=getRecommendedPurchase");
+    const data = await r.json();
+
+    let html = `
+      <div class="infoBox">
+        🛒 Recommended purchase order
+      </div>
+      <table class="dataTable">
+        <thead>
+          <tr>
+            <th>Ingredient</th>
+            <th>Quantity to Order</th>
+            <th>Unit</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    data.forEach(r => {
+      html += `
+        <tr>
+          <td class="prep">${r.ingredient}</td>
+          <td><strong>${r.qty}</strong></td>
+          <td>${r.unit}</td>
+        </tr>
+      `;
+    });
+
+    html += `
+        </tbody>
+      </table>
+    `;
+    
+    tab.innerHTML = html;
+  } catch (error) {
+    console.error("Error loading purchase:", error);
+    tab.innerHTML = '<div class="status-message error">❌ Error loading purchase data. Please refresh.</div>';
+  }
+}
+
+// Initialize with form tab active
+showTab('form');
 </script>
 
 </body>
