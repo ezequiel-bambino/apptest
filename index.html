@@ -237,11 +237,11 @@ body {
   content: "🍕";
 }
 
-/* Input Groups - Centered */
+/* Input Groups - With + and - buttons */
 .stock-inputs, .waste-inputs {
   display: flex;
   justify-content: center;
-  gap: 40px;
+  gap: 30px;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -259,8 +259,40 @@ body {
   font-weight: 500;
 }
 
-.stock-input-group input, .waste-input-group input {
-  width: 100px;
+.input-with-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-with-buttons button {
+  width: 36px;
+  height: 40px;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  background: #e63946;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 0;
+  padding: 0;
+}
+
+.input-with-buttons button:hover:not(:disabled) {
+  background: #c1121f;
+  transform: scale(1.05);
+}
+
+.input-with-buttons button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.input-with-buttons input {
+  width: 80px;
   padding: 10px;
   font-size: 18px;
   text-align: center;
@@ -270,12 +302,12 @@ body {
   background: white;
 }
 
-.stock-input-group input:focus, .waste-input-group input:focus {
+.input-with-buttons input:focus {
   outline: none;
   border-color: #e63946;
 }
 
-.stock-input-group input:disabled, .waste-input-group input:disabled {
+.input-with-buttons input:disabled {
   background: #f5f5f5;
   color: #999;
 }
@@ -502,17 +534,6 @@ body {
 }
 
 /* Status Messages */
-.status-message {
-  margin-top: 20px;
-  padding: 15px;
-  background: #e8f5e9;
-  border-left: 4px solid #4caf50;
-  border-radius: 8px;
-  text-align: left;
-  font-size: 14px;
-  color: #2e7d32;
-}
-
 .last-submission-info {
   margin: 15px 0;
   padding: 12px 15px;
@@ -551,8 +572,14 @@ body {
     gap: 15px;
   }
   
-  .stock-input-group input, .waste-input-group input {
-    width: 120px;
+  .input-with-buttons button {
+    width: 32px;
+    height: 36px;
+    font-size: 18px;
+  }
+  
+  .input-with-buttons input {
+    width: 70px;
   }
   
   .tab {
@@ -656,12 +683,37 @@ body {
 </div>
 
 <script>
-const URL = "https://script.google.com/macros/s/AKfycbwAsjdtQi-Z4SekT-bJIHJPSxkzPVtulT5PmT6BHc2nGS68EFXaG5l5UGsqk8mgD3sr/exec";
+const URL = "https://script.google.com/macros/s/AKfycbzsBTCrlAk7hOXuH5JEUHOLv7O3mds-cmU2w7GcEstV4lpelxgJ7o5YfIH9vmeN6wcp/exec";
 
 /* ===============================
    INPUT UTILITIES
 =============================== */
-function setupNumberInput(input) {
+function setupNumberInput(input, minusBtn, plusBtn) {
+  // Function to update value
+  const updateValue = (delta) => {
+    if (input.disabled) return;
+    let current = parseInt(input.value) || 0;
+    current = Math.max(0, current + delta);
+    input.value = current;
+    // Trigger input event
+    const event = new Event('input', { bubbles: true });
+    input.dispatchEvent(event);
+  };
+  
+  // Add event listeners to buttons
+  if (minusBtn) {
+    minusBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      updateValue(-1);
+    });
+  }
+  if (plusBtn) {
+    plusBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      updateValue(1);
+    });
+  }
+  
   input.addEventListener('focus', function() {
     if (this.value === '0') {
       this.select();
@@ -761,11 +813,19 @@ async function loadPizzas(){
         <div class="stock-inputs">
           <div class="stock-input-group">
             <label>🍕 Whole Pies</label>
-            <input type="number" id="whole_${pizzaName}" class="whole" min="0" value="0" placeholder="0">
+            <div class="input-with-buttons">
+              <button class="minus-whole" data-pizza="${pizzaName}" type="button">−</button>
+              <input type="number" id="whole_${pizzaName}" class="whole" min="0" value="0" placeholder="0">
+              <button class="plus-whole" data-pizza="${pizzaName}" type="button">+</button>
+            </div>
           </div>
           <div class="stock-input-group">
             <label>🔪 Slices</label>
-            <input type="number" id="slice_${pizzaName}" class="slice" min="0" max="7" step="1" value="0" placeholder="0">
+            <div class="input-with-buttons">
+              <button class="minus-slice" data-pizza="${pizzaName}" type="button">−</button>
+              <input type="number" id="slice_${pizzaName}" class="slice" min="0" max="7" step="1" value="0" placeholder="0">
+              <button class="plus-slice" data-pizza="${pizzaName}" type="button">+</button>
+            </div>
           </div>
         </div>
       `;
@@ -774,8 +834,13 @@ async function loadPizzas(){
       
       const wholeInput = document.getElementById(`whole_${pizzaName}`);
       const sliceInput = document.getElementById(`slice_${pizzaName}`);
-      setupNumberInput(wholeInput);
-      setupNumberInput(sliceInput);
+      const minusWhole = itemDiv.querySelector('.minus-whole');
+      const plusWhole = itemDiv.querySelector('.plus-whole');
+      const minusSlice = itemDiv.querySelector('.minus-slice');
+      const plusSlice = itemDiv.querySelector('.plus-slice');
+      
+      setupNumberInput(wholeInput, minusWhole, plusWhole);
+      setupNumberInput(sliceInput, minusSlice, plusSlice);
     });
 
     const saved = JSON.parse(localStorage.getItem("lastStockSubmit") || "{}");
@@ -806,6 +871,7 @@ function disableStockForm(){
   document.getElementById("stockUser").disabled = true;
   document.getElementById("forecast").disabled = true;
   document.querySelectorAll("#stockForm input").forEach(input => input.disabled = true);
+  document.querySelectorAll("#stockForm button").forEach(btn => btn.disabled = true);
   document.getElementById("submitStockBtn").disabled = true;
 }
 
@@ -813,6 +879,7 @@ function enableStockForm(){
   document.getElementById("stockUser").disabled = false;
   document.getElementById("forecast").disabled = false;
   document.querySelectorAll("#stockForm input").forEach(input => input.disabled = false);
+  document.querySelectorAll("#stockForm button").forEach(btn => btn.disabled = false);
   document.getElementById("submitStockBtn").disabled = false;
 }
 
@@ -990,11 +1057,19 @@ async function loadClosing(){
           <div class="waste-inputs">
             <div class="waste-input-group">
               <label>🍕 Whole Pies</label>
-              <input type="number" id="wasteWhole_${pizzaName}" min="0" value="0" placeholder="0">
+              <div class="input-with-buttons">
+                <button class="minus-waste-whole" data-pizza="${pizzaName}" type="button">−</button>
+                <input type="number" id="wasteWhole_${pizzaName}" min="0" value="0" placeholder="0">
+                <button class="plus-waste-whole" data-pizza="${pizzaName}" type="button">+</button>
+              </div>
             </div>
             <div class="waste-input-group">
               <label>🔪 Slices</label>
-              <input type="number" id="wasteSlice_${pizzaName}" min="0" max="7" value="0" placeholder="0">
+              <div class="input-with-buttons">
+                <button class="minus-waste-slice" data-pizza="${pizzaName}" type="button">−</button>
+                <input type="number" id="wasteSlice_${pizzaName}" min="0" max="7" value="0" placeholder="0">
+                <button class="plus-waste-slice" data-pizza="${pizzaName}" type="button">+</button>
+              </div>
             </div>
           </div>
           <div class="note">Enter the amount left at end of day</div>
@@ -1011,8 +1086,13 @@ async function loadClosing(){
       
       const wasteWhole = document.getElementById(`wasteWhole_${pizzaName}`);
       const wasteSlice = document.getElementById(`wasteSlice_${pizzaName}`);
-      setupNumberInput(wasteWhole);
-      setupNumberInput(wasteSlice);
+      const minusWhole = itemDiv.querySelector('.minus-waste-whole');
+      const plusWhole = itemDiv.querySelector('.plus-waste-whole');
+      const minusSlice = itemDiv.querySelector('.minus-waste-slice');
+      const plusSlice = itemDiv.querySelector('.plus-waste-slice');
+      
+      setupNumberInput(wasteWhole, minusWhole, plusWhole);
+      setupNumberInput(wasteSlice, minusSlice, plusSlice);
       
       const wasteRadio = document.getElementById(`waste_${pizzaName}`);
       const soldoutRadio = document.getElementById(`soldout_${pizzaName}`);
@@ -1073,6 +1153,7 @@ function disableClosingForm(){
   document.getElementById("closingUser").disabled = true;
   document.getElementById("generalNote").disabled = true;
   document.querySelectorAll("#closingForm input").forEach(el => el.disabled = true);
+  document.querySelectorAll("#closingForm button").forEach(btn => btn.disabled = true);
   document.getElementById("submitClosingBtn").disabled = true;
 }
 
@@ -1080,6 +1161,7 @@ function enableClosingForm(){
   document.getElementById("closingUser").disabled = false;
   document.getElementById("generalNote").disabled = false;
   document.querySelectorAll("#closingForm input").forEach(el => el.disabled = false);
+  document.querySelectorAll("#closingForm button").forEach(btn => btn.disabled = false);
   document.getElementById("submitClosingBtn").disabled = false;
 }
 
